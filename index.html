@@ -1,0 +1,4281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>江苏飞兔配送服务有限公司-数据系统测试版v1.0</title>
+<!--
+  ============================================================
+  江苏飞兔配送服务有限公司 · 运营数据看板 UI v13.0（功能完整版 · 示例数据）
+  ------------------------------------------------------------
+  v13 调整
+  1. 移除「各事业部销售额对比」「热销产品 Top5」「核心目标完成进度」三张卡片，仅保留本月星级看板
+  2. (v13.2) 星级看板下方新增三张人员结构饼图：入职渠道分布 / 司龄分布 / 离职周期分布（各占 1/3）
+  3. (v13.3) 饼图升级伪3D立体（径向渐变+投影），三图样式各异（环形 / 玫瑰半径 / 玫瑰面积）；
+     数据口径更新：入职渠道5类 / 司龄6档 / 离职6档；实况总览隐藏；随城市/站点联动缩放
+  4. (v13.4) 入职渠道改为分离式实心饼（扇区外移爆炸效果 + 高对比五色），消除扇区同色与两图同质化
+  5. (v13.5) 入职渠道恢复环形图（保留高对比五色区分扇区）；司龄分布改分离式实心饼
+  6. (v13.6) 司龄分布改多环同心图（7天内→90天以上由内向外，环宽∝占比）
+  7. (v13.7) 同心环改为同起点弧：各环自12点方向起、弧长∝占比，余量透明
+  8. (v13.8) 同心环等宽并环间留隙；三饼图去除投影光晕（保留渐变立体）
+  9. (v13.9) 三饼图去除径向渐变改平涂色，恢复柔光投影（软阴影）
+  10. (v13.10) 入职渠道/离职周期扇区加木质纹理（canvas木纹图案）；司龄环弧边角圆化
+  11. (v13.11) 木纹不规则化：随机条数/位置/宽度/透明度/木结；各扇区按名称种子生成独立纹理
+  12. (v13.12) 入职渠道环形图扇区独立切割（沿中角外移留缝，角度占比不变）
+  13. (v13.13) 独立切割强化：外移加大至10%、扇区投影减弱防糊缝、描边加深，切缝清晰可见
+  14. (v13.14) 入职渠道外移加大至16并圆角化（半径收窄防裁切）；木纹加密(10~15条)/加深/变细
+  15. (v13.15) 入职渠道整体放大(半径35~55%)并上移(中心48→45%)，顶部扇区外移收窄防裁切；司龄改双倍细弧线(每档内外两条)，默认不闭环、占比100%才闭合
+  16. (v13.16) 入职渠道进一步放大：图表区加高至340px、半径35~56%（直径约190px）
+  17. (v13.17) 司龄回退单环图条；弧长按占比×2绘制（透明余量补全开弧），仅弧长满圈才闭环；修复单数据项被ECharts视为100%导致的全闭环
+  18. (v13.18) 图表区收窄至300px；入职/离职饼图改绝对像素半径保持原大小，司龄随容器缩放；图例仅显示项目名，数据只在饼图牵引线标注
+  19. (v13.19) 星级看板体验分环比：数值文本 上涨/持平绿色、下降红色（符号保持 ▲绿/▼红/—黄不变）
+  20. (v13.20) 修复体验分环比数值文本颜色：.up/.down 原仅作用于KPI卡，补星表作用域规则
+  21. (v13.21) KPI卡右上角标注固定为一级名称（总览/济南/淄博），不随维度/站点下钻变化
+  22. (v13.22) 三张饼图标题居中，标题色与星级看板一致（复古金#C9A96A）
+  23. (v13.23) 移除三张饼图头部「人数占比」标签
+  24. (v13.24) 星级看板标题「本月」改为动态显示当前月份
+  25. (v13.25) 星级看板移除临淄东站；站点维度选择临淄东站时显示利群站数据（别名映射）
+  26. (v13.26) 别名仅作用于星级看板；入职/司龄/离职饼图与4项KPI恢复显示临淄东站自身数据
+  27. (v13.27) 三饼图下方新增「薪动力达成」表格看板（14列，随城市/站点下钻联动，实况总览隐藏）
+  28. (v13.28) 薪动力达成：新增「实际达成」列（净达成）；封顶达成率<102%标红；站长评级改中文（优秀/良好/合格）
+  29. (v13.29) 薪动力达成看板百分比保留小数点后两位
+  30. (v13.30) 薪动力标题随维度联动（本月/本周→累计达成，昨日→达成）；站点维度下改逐日明细（本月每日/本周每日/昨日单日，首列变日期）
+  31. (v13.31) 站点维度标题去「累计」；昨日维度标题栏加「低效名单」弹窗按钮；本月/本周（站点维度以上）加「明细详情」汇总⇄逐日切换按钮
+  32. (v13.32) 低效名单弹窗改列：站点名称/骑手姓名/低效不结算原因/全天完成单量/高峰期单量/高峰单量占比/剔除改派后完成单
+  33. (v13.33) 低效名单弹窗加宽至 1000px，表格无需左右滑动
+  34. (v13.34) 明细详情改为弹窗（宽 1380px）：站长评级→权益得分，站点名称前新增日期列
+  35. (v13.35) 明细详情弹窗表格缩小（11px 紧凑内边距、宽 1180px 无需横向滑动）；新增「未达成名单」筛选：权益得分<40（权益得分改逐日种子值 2 位小数，<40 标红）
+  36. (v13.36) 标1占比>15% 与高标准占比<85% 数值文本标黄（看板与明细弹窗同步生效）
+  37. (v13.37) 重复入离职/低效人数/纯新剔除>0 标浅红（看板与明细弹窗同步生效）
+  38. (v13.38) 新增组织维度密码锁：打开时弹密码窗，000=总览 / 1xx=济南(101~104站点) / 2xx=淄博(201~212站点)，输入对应密码直接跳转对应维度
+  39. (v13.39) 权限分级：总览密码全维度可见；城市密码仅该城市及站点；站点密码仅锁定对应站点；解锁自动跳转密码对应最高级，导航按权限隐藏
+  40. (v13.40) 薪动力站点级·本月/本周新增「低效名单」按钮；站点级弹窗首列显示日期（与看板下钻一致）
+  41. (v13.41) 导航栏右侧新增深蓝「权益」按钮：弹窗展示权益明细（只联动组织维度，不受本月/本周/昨日限制）
+  42. (v13.42) 权益按钮移至维度导航行右侧；权益弹窗需密码 0326 才能查看（会话内一次验证）
+  43. (v13.43) 所有弹窗滚动条统一为看板色调（深色轨道 + 卡其棕滑块，悬停卡其金）
+  44. (v13.44) 进入页面密码弹窗改粉色调兔子主题：左上/右上兔子耳朵、标题「又是元气满满的一天，加油吧骚年」、去除输入栏提示
+  45. (v13.45) 锁屏弹窗去兔子线画；耳朵改为长垂耳（向上延伸后弯曲向下）；标题两行渐变艺术字 + 分隔线排版，文案美化
+  46. (v13.46) 锁屏耳朵改为具象兔子耳（大尺寸叶片形渐变 + 内耳，外展倾斜）；「进入看板」渐变艺术字胶囊按钮；标题改错落排版 + 手绘波浪线
+  47. (v13.47) 锁屏耳朵改为垂耳兔造型：两角向下垂挂，外缘毛绒扇贝边 + 柔光描边 + 渐变内耳（毛茸茸感）
+  48. (v13.48) 移除垂耳，改为左右上角小巧兔耳（渐变 + 内耳 + 柔光描边，微外倾）
+  49. (v13.49) 弹窗/密码窗弹出时看板背景虚化（backdrop-filter 毛玻璃）
+  50. (v13.50) 薪动力看板下方新增「8小时占比趋势」曲线图（占 1/2），右侧 1/2 预留占位；随周期/城市/站点联动缩放，实况总览隐藏
+  51. (v13.51) 8小时占比趋势：固定本月逐日口径、不随时间范围变化；Y 轴改 80%~100%；新增 96% 红色虚线标准线
+  52. (v13.52) 8小时占比趋势：去掉标记点与网格；曲线改平滑渐变线（颜色浅→深、线宽细→粗）
+  53. (v13.53) 8小时占比趋势：线条圆化处理（线帽 round，渐变分段衔接处圆润过渡）
+  54. (v13.54) 8小时占比趋势：线条增加立体感（暗色下缘衬线 + 柔和投影，圆管悬浮效果）
+  55. (v13.55) 8小时占比趋势：移除曲线下方阴影面积，仅保留立体渐变线
+  56. (v13.56) 8小时占比趋势：垂直线仅在光标贴近日期点位（±16px）时显示，间隙不触发；tooltip 占比保留两位小数
+  57. (v13.57) 修复 v13.56 竖线不显示：恢复 tooltip 默认渲染，改为「贴近日期点主动显示、远离强制隐藏」
+  58. (v13.58) 修复 tooltip 闪烁：迟滞阈值（16px 内显示 / 32px 外隐藏，中间保持现状）+ 状态切换时才派发，光标停留时数据稳定显示
+  59. (v13.59) 8小时占比趋势：增强线条投影影子（模糊 10px / 下移 3px / 加深 50%），悬浮立体感更强
+  60. (v13.60) 8小时占比趋势：投影改为左上角光源方向（影子向右下 3px/3px 偏移）
+  61. (v13.61) 8小时占比趋势：影子下移加大（3px → 6px）
+  62. (v13.62) 8小时占比趋势：影子下移加大至 30px
+  63. (v13.63) 8小时占比趋势：影子改倾斜渐变——起始端贴合主线，末端右下偏移达 8px/30px（右移加 5px，下移随位置 0→30px）
+  64. (v13.64) 8小时占比趋势：倾斜角增大——下移改加速曲线（中段更早下垂），末端仍为 30px
+  65. (v13.65) 8小时占比趋势：Y 轴改 85%~100%；新增交互弹窗按钮——总览/城市维度【站点明细】、站点维度【骑手明细】，内容随时间范围联动
+  66. (v13.66) 明细弹窗重构：站点明细改为聚合列（有单人数/未达标人数/8小时占比，按周期前缀）；骑手明细只显示未达标记录（日期/站点/骑手/有效时长）
+  67. (v13.67) 卡片右上角去掉「总览」字样；占比明细弹窗宽度随表格内容自适应、列宽适中
+  68. (v13.68) 8小时占比趋势卡片右上角维度标签完全移除（总览/城市/站点均不显示）
+  69. (v13.69) 预留区域改为「体验看板」：双向横向柱状图（正常场景→右 / 特殊场景→左）+ 各站点散点叠加，随城市/站点联动
+  70. (v13.70) 体验看板改双指标：相对准时率（左轴 0~100%）/ 配送时长（右轴 0~60分，双轴向中间靠拢）；柱体金色系明暗渐变立体
+  71. (v13.71) 体验看板：双轴移至上方且隐藏轴标识；以中间为界左右分区——准时率 90~100% 左半、配送时长 15~40分 右半，柱最长顶到中线不越界
+  72. (v13.72) 体验看板：两柱错落排布——准时率柱左上、配送时长柱右下，不在同一行
+  73. (v13.73) 体验看板数据口径：本月=维度总数据；本周/昨日同一逻辑（总数据×周期浮动）；散点=各站点差异，联动组织维度
+  74. (v13.74) 体验看板暂移除站点散点，只保留双向柱状图（数据逻辑保留，后续可恢复）
+  75. (v13.75) 体验看板：柱加宽3倍（barWidth 60）；图表区不显示类别文字；数值移至柱顶；tooltip 两位小数（相对准时率：xx.xx% / 配送时长：xx.xx分钟）
+  76. (v13.76) 体验看板：柱顶文本改为完整指标名+两位小数——相对准时率：xx.xx%、配送时长：xx.xx分钟
+  77. (v13.77) 体验看板：柱状图去掉图例；新增散点图（下X轴人效20~50、左Y轴出勤率80~100%自上而下反向），柱散同卡上下排布，联动组织维度与周期
+  78. (v13.78) 修复散点图与柱状图图表区重叠：抬高卡片高度、柱状图绘图区收紧至足够容纳60px柱、散点图轴名空间调整、渲染后强制双实例resize
+  79. (v13.79) 体验看板：柱状图与散点图合并为同一图表区（单实例同画布）——散点全区域grid叠加在柱状错落分区上，人效×出勤率轴覆盖全图
+  80. (v13.80) 散点图时间范围与组织维度口径对齐柱状图：本月=维度总数据；本周/昨日同逻辑浮动；站点维度散点即该站自身
+  81. (v13.81) 总览维度下散点图显示集团整体数据单点（非站点标识）；城市/站点维度维持站点分布
+  82. (v13.82) 体验看板：去掉网格与坐标轴数值刻度；散点改淡蓝气泡（左下XY交叉为原点、越远越大、径向由内透明向外实）；散点tooltip去单位；柱状改透明→实体水平渐变
+  83. (v13.83) 体验看板：去掉散点图坐标轴线（保留人效/出勤率轴名）
+  84. (v13.84) 体验看板：刻度线（锯齿）全部去掉；气泡体积增大1/2；柱状图中间分界线显示
+  85. (v13.85) 体验看板：中间线补齐下半段（配送时长40分侧）与上半段拼接贯穿全图；隐藏markLine数值标签（去掉100数字）
+  86. (v13.86) 8小时/体验下方新增整行卡片「非公违规数据」：5个子卡片（虚假点送达/虚假配送单（含自下）/违规引导更改地址/违规引导取消/虚假骑手）各占1/5，号码牌样式大数字，随组织维度与周期联动
+  87. (v13.87) 非公违规数据改按「周期范围×组织维度」直接统计数量（各组合独立种子，非占比折算），量级随层级/周期自然递减
+  88. (v13.88) 非公违规数据改自底向上求和口径：站点为数据源独立统计，城市=Σ下属站点、总览=Σ全部门店；本月/本周/昨日同口径逐级求和
+  89. (v13.89) 修复非公违规求和口径：每站基数恒按全部16站均摊（与当前视图无关），保证同一站各视图数值一致、上级严格=Σ下级
+  90. (v13.90) 非公违规：站点级数量先取整并缓存，上级维度=Σ站点整数（消除四舍五入漂移，求和严格精确）
+  91. (v13.91) 非公违规卡片新增【违规明细】弹窗：双交互页（站点维度/骑手明细）；站点维度列=站点名称+5类违规；骑手明细列=日期/站点名称/骑手姓名/违规类型；列宽适中、弹窗随表格自适应
+  92. (v13.92) 站点维度表在「虚假点送达」前新增「虚假点送达容错」列：表头深红标记，固定额度不随周期变化
+  93. (v13.93) 违规明细弹窗：初始大小以站点维度表为准（先显示再测量，修复隐藏态宽度测量为0）；选择骑手明细时再按骑手明细表宽适配
+  94. (v13.94) 8小时占比趋势线去除重影：移除暗色下缘衬线与倾斜长投影，只保留渐变主线
+  95. (v13.95) 恢复趋势线倾斜长投影（重影仅指暗色下缘衬线，投影保留）
+  96. (v13.96) 8小时占比趋势线增加高光：主线中心叠加亮金色细高光线（上缘受光），增强立体质感
+  97. (v13.97) 趋势线高光改为边缘高亮：贴主线顶部边缘（左上光源），不再居中叠加
+  98. (v13.98) 移除趋势线高光（效果不佳），恢复渐变主线+倾斜投影
+  99. (v13.99) 非公违规下方新增两看板：「留存两项达成指标」（占1/3，柱状图：全量留存率/次月留存率）＋「权益项安全逐日趋势」（占2/3，折线图：戴盔系带/路口超速双按钮切换，含月度达成浮动虚线+右侧标注）
+  100. (v13.100) 权益项安全Y轴随类型切换：戴盔系带 80%~100%，路口超速 0%~10%（超速率口径）；X轴保持日期刻度
+  101. (v13.101) 权益项安全X轴重构为 time 时间轴：自动生成日期刻度（MM-DD），标签提亮放大，确保日期刻度稳定显示
+  102. (v13.102) 修复权益项安全垂直线卡住：鼠标移出图表时强制隐藏 tooltip/axisPointer（dispatchAction hideTip）＋缩短 hideDelay
+  103. (v13.103) 安全趋势竖线仍卡：移除 smooth 平滑（time轴+smooth为 axisPointer 残留已知诱因）、显式 axisPointer line+snap:false、triggerOn mousemove
+  104. (v13.104) 安全趋势竖线彻底修复：手动接管轴指针（triggerOn none＋zr 监听精确 showTip/hideTip），完全绕开 time 轴默认追踪 bug
+  105. (v13.105) 安全趋势竖线机制改为与 8小时占比完全同款：value 轴（0~n-1）＋16/32px 迟滞防抖＋convertFromPixel 定位，X轴日期经 formatter 显示
+  106. (v13.106) 安全趋势去掉网格线（Y轴横向虚线隐藏）
+  107. (v13.107) 安全逐日/留存两项：Y轴及数值隐藏、网格线去除；留存Y轴范围改 30%~100%；两看板数据不随周期变化（固定口径）
+  108. (v13.108) 留存两项移除 80% 横向参考虚线
+  109. (v13.109) 留存两项柱状改为尖峰柱状图：custom series 三角形锥柱（顶部尖峰、金色渐变、柱顶数值保留）
+  110. (v13.110) 留存双柱升级弧形曲线边：二次贝塞尔曲线、两柱内角于中部接触、外角向图表区边缘扩散、柱体半透明渐变（透明感）
+  111. (v13.111) 留存双峰边改为向内弯曲（控制点收向柱顶点侧，凹形弧）、外角收回图表区内完整显示、两柱严格对称
+  112. (v13.112) 【复盘总览】定版：全链路自检通过（77个DOM节点/60处引用/关键函数/事件绑定/图表实例全部匹配），UI与交互冻结
+  113. (v13.113) 实况总览新增首卡【今日精排预估·正常场景】（占半行）：10列（站点/预估日得分/应排班人数/有单人数/排班合格得分/午高峰得分/晚高峰得分/合格出勤得分/合格出勤人数/有单合格率），仅实况视图展示、固定24h口径、随维度联动
+  114. (v13.114) 实况行重排：今日精排预估占 3/5（span-7），新增【实时8小时风险预估】占 2/5（span-5）：站点/8小时占比/风险状态（正常/关注/预警，96%/92%阈值，语义色）
+  115. (v13.115) 修复精排看板被挤压：补上缺失的 .span-7 栅格定义（此前 span-7 未定义，卡片仅占 1/12 列宽），并同步响应式降级规则
+  116. (v13.116) 实时8小时风险列改为：站点/有单人数/不足8小时风险人数/8小时风险占比（有单人数与精排卡同源一致）；表格样式与精排预估统一
+  117. (v13.117) 修复8小时风险卡数据 bug：有单人数取值误用 s.site（undefined 致恒为0），改为按站点名直接取值；Node 验证三列自洽（两卡有单人数一致/占比=风险人数÷有单人数/风险人数≤有单人数）
+  118. (v13.118) 实况两卡调整：①比例改 8:4 并压缩表格样式，无横向滚动；②排班/午高峰/晚高峰/合格出勤得分为 0~1 比率保留4位小数；③四项得分<1 红、=1 绿；④合格出勤人数1位小数；⑤站点源改 SITES 全量（含理工大学/政务中心/临淄东，维度筛选可达）；⑥临淄东站与利群站精排数据一致（种子同源）
+  119. (v13.119) 修复得分颜色不显示：.num 的 color 特异性高于单类 .score-*，改为 .star-table .num.score-* 提升优先级；集约站（理工大学/政务中心）得分标注阈值改为 0.1（≥0.1 绿、<0.1 红），其余站点仍 =1 绿、<1 红
+  120. (v13.120) 精排预估卡加入可交互标签页【正常天气】【恶劣天气】（state.weather，标题/表头联动）；恶劣天气仅最后一列表头换为注册合格率（数据同区间独立种子）；新增【查看明细】弹窗：全站 16 站（含集约两站）10 列明细，宽度自适应，天气联动
+  121. (v13.121) 移除【查看明细】按钮及弹窗（planModal 全套：按钮/事件/函数/弹窗 HTML/CSS）；两个看板站点源确认含集约两站（理工大学/政务中心），Node 模拟渲染输出行验证
+  122. (v13.122) 在 16 个基础站点之上新增两个独立集约配送站【集约配送-江苏飞兔【淄博】理工大学站】【集约配送-江苏飞兔【淄博】政务中心站】，两看板共 18 行；集约站独立种子数据、得分阈值 0.1（普通站恢复 =1 绿/<1 红）；维度筛选普通站时对应集约站成对展示；集约站归属淄博（城市=济南时仅 4 行）
+  123. (v13.123) 消除两看板左右滚动：≤1280px 时精排/风险卡改整行（span 12）不再降半行，表格字号留白再压缩；实时8小时卡新增【风险骑手明细】弹窗（站点/骑手姓名/当前有效时长/预估有效时长/夜宵判定/夜宵保底时长），夜宵骑手绿色文本，每站 3~5 名风险骑手（当前有效时长<8h 与卡片口径一致）
+  124. (v13.124) 两卡表格格式完全同步（同字号/同留白）+ table-layout:fixed 强制表格宽度=卡片宽度（站点列 16%/38% 分配、站点名允许换行），彻底杜绝横向滚动条
+  125. (v13.125) 站点名称不换行（单行完整显示）：移除 fixed 布局与换行规则，恢复内容自适应；实时8小时卡缩小字号（9.5px/表头 9px）使 4 列含最长集约站名单行放下，精排卡保持 11px 单行
+  126. (v13.126) 集约配送两站显示名去除「江苏飞兔【淄博】」前缀（集约配送-理工大学站/集约配送-政务中心站），底层种子与数据不变（siteLabel 仅渲染层映射）；名称变短后两卡字号统一恢复 11px 格式同步
+  127. (v13.127) 实时8小时风险卡标题改为左对齐（移除 card-head center，标题居左、按钮居右）
+  128. (v13.128) KPI 与实况两卡之间新增两看板：【明日分时段出勤率（来源线上排班）】span-9 柱状图（X轴 早餐/午高峰/下午茶1/下午茶2/晚高峰/夜宵，金色渐变柱+柱顶百分比标签）与【实时低效人数】span-3 号码牌（大号金色数字+较昨日 delta）；仅实况总览视图显示，随维度联动
+  129. (v13.129) 修复新两卡视图归属：误加入 hide 列表（hide=isLive 致实况隐藏/复盘显示，正好反向），改为与精排/风险卡相同的显式控制——实况总览显示、复盘总览隐藏
+  130. (v13.130) 修复第一行错位：缺失 .span-9 栅格定义（出勤率卡仅占 1/12 列，与低效卡挤在 4 列、精排卡上移），补上 span-9 并同步 ≤1280px 降 span-6、≤960px 降 span-12
+  131. (v13.131) 明日分时段出勤率柱状图 Y 轴显示 0%~100% 刻度（axisLabel 百分比格式 + 浅金网格线，grid 左侧预留刻度空间）
+  132. (v13.132) 出勤率柱状图坐标轴完整可见：X/Y 轴轴线+刻度线全部显示（淡金色），Y 轴 0%~100% 刻度标签，消除“无轴”视觉
+  133. (v13.133) 修复出勤率图白屏根因：renderAll 先渲染图表后显示容器，echarts.init 在 display:none 容器上宽 0 导致整图不可见；改为先显示实况四卡容器再渲染图表，且 renderAttrPlan setOption 后强制 resize()
+  134. (v13.134) 出勤率图：去掉 Y 轴网格线；柱体改为底部浅色半透明→顶部深色渐变（透明化）。低效人数：数字增大至 72px 亮金色，“人”字同字体同大小黑色并排，移除较昨日同期对比
+  135. (v13.135) 出勤率图彻底无线：X/Y 轴轴线与刻度线全部隐藏（用户所见白色实线=淡金轴线在屏上偏白），仅保留时段标签与 0%~100% 刻度文字；低效“人”字改浅金灰 #B8A878
+  136. (v13.136) 根治网格线：ECharts value 轴 splitLine 默认显示，v13.134 删除配置后回落默认白色网格线——显式 splitLine:{show:false}（X/Y 轴都显式关闭）；低效人数移除“人”字，数字加金色边框号码牌框
+  137. (v13.137) 柱体改不透明鲜亮渐变（底浅金 #F2DFB0→顶深琥珀金 #C9963E）；低效数字+框整体上移，框下新增可交互按钮【实时低效明细】弹窗（站点/低效人数/主要低效原因+合计，与号码牌数字同源求和）
+  138. (v13.138) 柱体渐变翻转（底深琥珀金 #C9963E→顶浅金 #F2DFB0）；修复低效数字+框偏左（flex 主轴写反：justify-content:flex-start 致水平左对齐，改 center 居中）并上移 6px；明细按钮宽度与数字框一致（JS 测量同步），按钮上下内边距加倍（3px→6px）
+  139. (v13.139) 明细按钮上移 6px、上下内边距再加一倍（6px→12px）；按钮下方新增注释【数据存在15分钟延迟】（浅灰金小字居中）
+  140. (v13.140) 低效数字+框下移 2px（顶部留白 18px→20px）；实时低效明细弹窗改为骑手明细列：站点名称/骑手姓名/总单量/双峰单量/双峰占比/改派剔除后单量/有效时长（每站 1~4 名低效骑手，合计=号码牌数字）
+  141. (v13.141) 【定版】除权益外，复盘总览（v13.112 已定版）+ 实况总览（精排预估/8小时风险/明日分时段出勤率/实时低效人数 + 风险骑手明细/实时低效明细双弹窗）全部搭建完成定版
+  142. (v13.142) 权益弹窗改造：新增【济南】【淄博】可切换按钮（总览权限双按钮初始显示济南/淄博两行汇总，点击展开城市+站点；城市权限单按钮展开对应城市；站点权限无按钮单行）；列：组织架构/总得分/体验分/服务质量得分/存量贡献度/推单完成率/虚假订单/虚假骑手/戴盔系带/路口超速，城市汇总行金色加粗、负向指标红色
+  143. (v13.143) 实况 KPI 卡「入职人数」「离职预估」环比改为【查看明细】按钮（弹窗列：站点名称/骑手ID/骑手姓名，按站点每站1~3人/1~2人）；精排预估卡恶劣天气按钮后新增【查看明细】弹窗（与卡片同源全列+合计行，标题联动天气）
+  144. (v13.144) 精排查看明细弹窗新增可切换按钮【合格出勤不达标人员】【班次未达成明细】（默认站点明细，点击切换、再点取消；不达标视图列：站点/姓名/预估可达成班次分/未达成班次名称/预估合格出勤分；班次未达成视图列：站点/姓名/未达成班次名称；未达成班次名称列宽=站点名称列 1.5 倍，JS 实测）
+  145. (v13.145) 精排查看明细弹窗初始界面改为【合格出勤不达标人员】（planDetailSel 默认 missAtt，打开即选中不达标视图；按钮仍可切换/取消）
+  146. (v13.146) 【全量定版】整体框架搭建完成：复盘总览 + 实况总览 + 权益弹窗全链路定版（后续修改/新增迭代）
+  147. (v13.147) 组织维度新增站点「江苏飞兔【淄博】临淄西站」：SITES 淄博 12→13 站（末位）、SITE_SHARES 重分配（13 项和=1）、STAR 新增临淄西站（3星，淄博 11→12 条）；站点下拉/密码锁（新增 213=临淄西，原 201~212 不变）/星级看板/薪动力/精排预估/8小时预估/权益/低效/风险明细等全部组织维度模块自动联动（实况 19 站、复盘星级/薪动力 16 站），Node 验证 22 项全 PASS
+  ------------------------------------------------------------
+  v12 调整
+  1. 去掉「渠道构成」图表，卡片重排：星级看板+目标进度 / 事业部+Top5
+  2. 星级看板新增 4 列：正常场景准时率得分/正常场景准时率/特殊场景准时率得分/特殊场景准时率
+  3. 体验分环比改为数值（非百分比）；看板数值保留 4 位小数，准时率百分比保留 2 位小数（v13.1 起同步改为 4 位）
+  4. 实况总览 KPI 独立口径：今日单量 / 有完成单人数 / 入职人数 / 离职预估
+  5. 复盘总览 KPI：服务费总额（剔除活动激励金）/ 完成单量 / 日均有单人数 / 净增人数
+  ------------------------------------------------------------
+  设计规范
+  · 风格：专业稳重 / 数据可视化；深卡其 #29241B 底，卡其金 #D4B483 主色
+  · 绿=增长↑ 红=下降↓（色盲友好）；字体 PingFang SC / 微软雅黑 / Noto Sans SC
+  · 响应式：1920 → 375px；prefers-reduced-motion 已尊重
+  · 图表：ECharts 5.5（staticfile CDN，jsdelivr 兜底）
+  ------------------------------------------------------------
+  数据层说明（接真实数据时只改 BASE / CITY_SHARES / SITE_SHARES）
+  · 复盘总览：本月(当月1日~昨日) / 本周(周一~昨日) / 昨日(24小时)；实况总览：今日 24 小时口径
+  · 城市/站点数据按占比分摊（示例口径），站点名单为实际组织，占比可替换
+  · 完成单量按服务费总额×15% 推算（示例口径）；人员结构饼图以 STAFF_BASE=12000 为基数、按城市/站点占比分摊（示例口径）
+  ============================================================
+-->
+<script src="https://cdn.staticfile.org/echarts/5.5.0/echarts.min.js"
+        onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js';document.head.appendChild(s);"></script>
+<style>
+/* ===== 主题变量 ===== */
+:root{
+  --bg:#29241B;
+  --card-bg:linear-gradient(180deg,rgba(74,64,47,.55),rgba(50,43,31,.78));
+  --card-line:rgba(201,169,106,.16);
+  --card-shadow:0 8px 24px rgba(0,0,0,.38);
+  --topbar-bg:rgba(41,36,27,.85);
+  --seg-bg:rgba(201,169,106,.14); --seg-active:#4A4030;
+  --btn-bg:rgba(255,255,255,.05); --btn-line:rgba(201,169,106,.28);
+  --brand:#D4B483; --brand-deep:#A98A55; --brand-soft:rgba(212,180,131,.16);
+  --text-1:#F0E9DA; --text-2:#C4B79B; --text-3:#9C9178;
+  --line:rgba(201,169,106,.28); --soft:rgba(201,169,106,.12);
+  --up:#8FAE7C; --down:#C96F4A;
+  --value-glow:0 0 18px rgba(212,180,131,.28); --logo-glow:0 0 14px rgba(212,180,131,.5); --corner-op:1;
+  --clock-bg:rgba(255,255,255,.03); --clock-line:rgba(201,169,106,.28);
+  --pbar-bg:rgba(201,169,106,.15);
+  --footer-c:#9C9178;
+  --toast-bg:rgba(46,41,31,.96); --toast-c:#EDE6D8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+  background:radial-gradient(1200px 600px at 50% -10%, rgba(212,180,131,.10), transparent 60%), var(--bg);
+  color:var(--text-1); font-size:14px; line-height:1.6;
+  min-height:100vh; transition:background .25s ease;
+}
+button{font-family:inherit}
+a{color:var(--brand);text-decoration:none}
+button:focus-visible,a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+/* ===== 顶部栏 ===== */
+.topbar{
+  position:sticky;top:0;z-index:10;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;background:var(--topbar-bg);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);transition:background .25s ease;
+}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{
+  width:34px;height:34px;border-radius:9px;flex:none;
+  background:linear-gradient(135deg,var(--brand),var(--brand-deep));
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:16px;box-shadow:var(--logo-glow);
+}
+.brand h1{font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand .sub{font-size:12px;color:var(--text-3)}
+.top-actions{display:flex;align-items:center;gap:12px}
+.icon-btn{
+  width:32px;height:32px;border-radius:8px;border:1px solid var(--btn-line);
+  background:var(--btn-bg);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text-2);transition:all .18s ease;
+}
+.icon-btn:hover{border-color:var(--brand);color:var(--brand)}
+/* 权益按钮（深蓝调） */
+.benefit-btn{
+  height:32px;padding:0 16px;border-radius:8px;cursor:pointer;
+  background:linear-gradient(180deg,#2B4A6F,#1B3350);
+  border:1px solid rgba(150,190,230,.4);
+  color:#B8D4F0;font-size:13px;font-weight:600;letter-spacing:1px;
+  display:flex;align-items:center;gap:6px;
+  transition:all .18s ease;
+}
+.benefit-btn:hover{background:linear-gradient(180deg,#35608F,#22406A);color:#D8EAFB;border-color:rgba(170,205,240,.55);box-shadow:0 0 10px rgba(70,130,190,.25)}
+.icon-btn.spinning svg{animation:spin .6s linear}
+@keyframes spin{to{transform:rotate(360deg)}}
+.icon-btn.on{border-color:var(--up);color:var(--up)}
+.clock{
+  font-family:"SF Mono",Consolas,"Courier New",monospace;
+  font-size:13px;color:var(--text-2);font-variant-numeric:tabular-nums;
+  padding:4px 10px;border:1px solid var(--clock-line);border-radius:8px;
+  background:var(--clock-bg);white-space:nowrap;
+}
+.avatar{
+  width:32px;height:32px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,#D4B483,#8A7F68);
+  color:#fff;font-size:13px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ===== 维度导航（视角 · 城市 · 站点，随标题栏固定） ===== */
+.nav-row{
+  position:sticky;top:60px;z-index:9;
+  display:flex;align-items:center;flex-wrap:wrap;gap:12px 20px;
+  padding:14px 24px 10px;
+  background:var(--topbar-bg);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav-row .benefit-btn{margin-left:auto}
+.nav-group{display:flex;align-items:center;gap:8px}
+.nav-label{font-size:12.5px;color:var(--text-3);white-space:nowrap}
+.seg{display:flex;background:var(--seg-bg);border-radius:8px;padding:3px}
+.seg button{
+  border:0;background:transparent;padding:5px 14px;border-radius:6px;
+  font-size:13px;color:var(--text-2);cursor:pointer;transition:all .18s ease;
+  white-space:nowrap;
+}
+.seg button.active{
+  background:var(--seg-active);color:var(--brand);font-weight:600;
+  box-shadow:0 1px 3px rgba(16,24,40,.12);
+}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.site-select{
+  appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  background:var(--btn-bg) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%23D4B483' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat right 10px center;
+  border:1px solid var(--btn-line);border-radius:8px;
+  color:var(--text-1);font-size:13px;line-height:1.5;
+  padding:6px 30px 6px 12px;cursor:pointer;
+  min-width:220px;max-width:340px;font-family:inherit;
+  transition:border-color .18s ease;
+}
+.site-select:hover{border-color:var(--brand)}
+.site-select:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.site-select option{background:#3D362C;color:#F0E9DA}
+
+/* ===== 布局 ===== */
+.layout{max-width:1920px;margin:0 auto;padding:20px 24px 8px;display:flex;flex-direction:column;gap:16px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.grid-main{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.span-12{grid-column:span 12}
+.span-9{grid-column:span 9}
+.span-8{grid-column:span 8}
+.span-7{grid-column:span 7}
+.span-6{grid-column:span 6}
+.span-5{grid-column:span 5}
+.span-4{grid-column:span 4}
+.span-3{grid-column:span 3}
+
+/* ===== 卡片 ===== */
+.card{
+  position:relative;
+  background:var(--card-bg);border:1px solid var(--card-line);
+  border-radius:12px;box-shadow:var(--card-shadow);
+  padding:16px 18px;display:flex;flex-direction:column;min-width:0;
+  transition:background .25s ease,box-shadow .25s ease;
+}
+.card::before,.card::after{
+  content:'';position:absolute;width:14px;height:14px;pointer-events:none;
+  border:2px solid var(--brand);opacity:var(--corner-op);
+}
+.card::before{top:8px;left:8px;border-right:0;border-bottom:0;border-radius:6px 0 0 0}
+.card::after{bottom:8px;right:8px;border-left:0;border-top:0;border-radius:0 0 6px 0}
+.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:4px}
+.card-head h2{font-size:15px;font-weight:600;white-space:nowrap}
+.card-head .tag{font-size:12px;color:var(--text-3);white-space:nowrap}
+.card-head .more{font-size:12.5px;color:var(--brand);cursor:pointer;white-space:nowrap}
+.card-head .more:hover{color:var(--brand-deep)}
+/* 标题居中（右侧保留操作链接） */
+.card-head.center{display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+.card-head.center h2{grid-column:2;justify-self:center;color:#C9A96A;margin-top:-3px}
+.card-head.center .tag{grid-column:3;justify-self:end}
+.card-head.center .more{grid-column:3;justify-self:end}
+/* 薪动力标题栏操作按钮 */
+.card-head.center .pay-actions{grid-column:3;justify-self:end;display:flex;gap:8px;align-items:center}
+.card-head.center .ratio-actions{grid-column:3;justify-self:end;display:flex;gap:8px;align-items:center}
+.card-head.center .violation-actions{grid-column:3;justify-self:end;display:flex;gap:8px;align-items:center}
+.pay-btn{
+  background:rgba(255,255,255,.05);border:1px solid rgba(201,169,106,.28);color:var(--brand);
+  border-radius:4px;padding:3px 12px;font-size:12px;cursor:pointer;white-space:nowrap;
+  transition:background .2s,color .2s,border-color .2s;
+}
+.pay-btn:hover{background:rgba(201,169,106,.18);color:#E6C46A}
+.pay-btn.active{background:rgba(201,169,106,.22);color:#E6C46A;border-color:rgba(230,196,106,.5)}
+/* 权益弹窗城市切换按钮 + 评分表样式 */
+.benefit-city-bar{display:flex;gap:8px;padding:0 16px 10px}
+.benefit-city-row td{font-weight:600;color:#E6C46A}
+.star-table .num.danger{color:#C96F4A}
+/* ===== 组织维度密码锁 ===== */
+.lock-mask{
+  position:fixed;inset:0;z-index:999;background:rgba(20,17,12,.93);
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+}
+.lock-panel{
+  width:min(380px,90vw);background:#332C21;border:1px solid var(--card-line);border-radius:12px;
+  padding:28px 26px;display:flex;flex-direction:column;gap:14px;text-align:center;
+  box-shadow:0 16px 50px rgba(0,0,0,.55);
+}
+.lock-panel h3{margin:0;color:var(--brand);font-size:18px}
+.lock-tip{margin:0;color:var(--text-2);font-size:12px}
+.lock-input{
+  background:rgba(255,255,255,.05);border:1px solid rgba(201,169,106,.28);border-radius:6px;
+  color:var(--text-1);padding:9px 12px;font-size:14px;text-align:center;outline:none;
+}
+.lock-input:focus{border-color:rgba(230,196,106,.6)}
+.lock-btn{width:100%;padding:9px 0;font-size:14px}
+.lock-err{margin:0;color:var(--down);font-size:12px;min-height:16px}
+/* 进入看板密码弹窗：粉色调兔子主题（v13.45 长垂耳 + 艺术字排版） */
+#lockModal .lock-panel{
+  position:relative;width:min(400px,92vw);overflow:visible;
+  background:linear-gradient(165deg,#FDEFF3 0%,#FAD4E0 55%,#F6BBD0 100%);
+  border:1px solid #F3A8C4;border-radius:18px;
+  padding:30px 26px 24px;
+  box-shadow:0 18px 55px rgba(214,69,126,.35), inset 0 1px 0 rgba(255,255,255,.8);
+}
+/* 左右上角小巧兔耳：渐变 + 内耳 + 柔光描边，微外倾 */
+#lockModal .lock-panel .ear-svg{
+  position:absolute;top:0;width:60px;height:70px;z-index:2;
+  pointer-events:none;overflow:visible;
+}
+#lockModal .lock-panel .ear-svg.l{left:-8px;transform:rotate(-10deg)}
+#lockModal .lock-panel .ear-svg.r{right:-8px;transform:rotate(10deg)}
+/* 标题排版：错落两行 + 手绘波浪线（去板正） */
+#lockModal .lock-panel h3{
+  margin:0;text-align:center;line-height:1.45;
+  display:flex;flex-direction:column;align-items:center;
+}
+#lockModal .lock-panel h3 .t1{
+  font-size:13.5px;font-weight:600;letter-spacing:5px;color:#C95E8A;
+  transform:rotate(-1.5deg);
+}
+#lockModal .lock-panel h3 .t1 i{font-style:normal;color:#EC407A}
+#lockModal .lock-panel h3 .t2{
+  font-size:23px;font-weight:800;letter-spacing:10px;line-height:1.35;
+  background:linear-gradient(90deg,#C2185B,#EC407A 55%,#F06292);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  transform:rotate(-2deg);
+  text-shadow:0 3px 16px rgba(236,64,122,.22);
+}
+#lockModal .lock-panel h3 .squiggle{margin-top:2px;transform:rotate(-2deg)}
+#lockModal .lock-tip{margin:0;color:#B0577E;font-size:12px;letter-spacing:1.5px}
+#lockModal .lock-input{
+  background:#FFF5F8;border:1.5px solid #F3A8C4;border-radius:10px;
+  color:#7A2447;padding:11px 14px;font-size:14px;text-align:center;letter-spacing:4px;
+}
+#lockModal .lock-input:focus{border-color:#EC407A;box-shadow:0 0 0 3px rgba(236,64,122,.15)}
+/* 「进入看板」艺术字：胶囊按钮 + 渐变字 */
+#lockModal .lock-btn{
+  background:rgba(255,255,255,.55);
+  border:1.5px solid rgba(233,30,99,.35);
+  border-radius:999px;padding:12px 0;
+  box-shadow:0 5px 16px rgba(236,64,122,.28), inset 0 1px 0 #fff;
+}
+#lockModal .lock-btn span{
+  background:linear-gradient(90deg,#D81B60,#EC407A,#F06292);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  font-size:16px;font-weight:800;letter-spacing:8px;
+}
+#lockModal .lock-btn:hover{
+  background:rgba(255,255,255,.75);
+  box-shadow:0 8px 22px rgba(236,64,122,.4), inset 0 1px 0 #fff;
+}
+#lockModal .lock-err{margin:0;color:#D81B60;font-size:12.5px;min-height:16px}
+/* 低效名单弹窗 */
+.modal-mask{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+}
+/* 弹窗滚动条统一看板色调（深卡其底 + 卡其棕滑块，悬停提亮为卡其金） */
+.modal-mask ::-webkit-scrollbar,
+.lock-mask ::-webkit-scrollbar{
+  width:10px;height:10px;
+}
+.modal-mask ::-webkit-scrollbar-track,
+.lock-mask ::-webkit-scrollbar-track{
+  background:#2A241B;border-radius:5px;
+}
+.modal-mask ::-webkit-scrollbar-thumb,
+.lock-mask ::-webkit-scrollbar-thumb{
+  background:#5A4C36;border-radius:5px;border:2px solid #2A241B;
+}
+.modal-mask ::-webkit-scrollbar-thumb:hover,
+.lock-mask ::-webkit-scrollbar-thumb:hover{
+  background:#D4B483;
+}
+.modal-mask ::-webkit-scrollbar-corner,
+.lock-mask ::-webkit-scrollbar-corner{
+  background:transparent;
+}
+.modal-mask *,
+.lock-mask *{
+  scrollbar-width:thin;
+  scrollbar-color:#5A4C36 #2A241B;
+}
+.modal-panel.wide{width:min(1180px,96vw);max-height:88vh}
+/* 占比明细弹窗：宽度随表格内容自适应，列宽适中 */
+#ratioModal .modal-panel{width:auto;min-width:480px;max-width:96vw}
+#ratioModal .star-table{width:auto}
+/* 违规明细弹窗：双页签 + 宽度随表格内容自适应 */
+.vio-tabs{display:flex;gap:8px;margin-bottom:10px}
+.vio-tab{padding:5px 14px;font-size:12.5px;color:var(--text-2);background:rgba(232,213,172,.06);border:1px solid var(--card-line);border-radius:999px;cursor:pointer;transition:all .2s;font-family:inherit}
+.vio-tab.active{color:#20180C;background:linear-gradient(135deg,#EAD9AE,#C9A96A);border-color:transparent;font-weight:600}
+.vio-tab:hover{border-color:rgba(201,169,106,.55)}
+#vioModal .modal-panel{width:auto;min-width:560px;max-width:96vw}
+#vioModal .star-table{width:auto}
+#riModal .modal-panel{width:auto;min-width:560px;max-width:96vw}
+#riModal .star-table{width:auto}
+.pay-btn.active{background:linear-gradient(135deg,#EAD9AE,#C9A96A);color:#20180C;border-color:transparent;font-weight:600}
+/* 容错列表头深红标记 + 数值深红 */
+.star-table th.th-tol{color:#C0392B;font-weight:700}
+.star-table th.th-tol::after{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:#C0392B;margin-left:4px;vertical-align:middle;box-shadow:0 0 5px rgba(192,57,43,.7)}
+.star-table td.tol{color:#C0392B;font-weight:600}
+/* 明细详情弹窗：紧凑表格，无需横向滑动 */
+#detailModal .star-table{font-size:11px}
+#detailModal .star-table th{font-size:10px;padding:5px 6px}
+#detailModal .star-table td{padding:4px 6px}
+/* 两卡表格格式：站点名单行不换行，字号适配卡片宽度 */
+#card-today-plan .star-table{font-size:11px}
+#card-today-plan .star-table th{font-size:10px;padding:5px 3px}
+#card-today-plan .star-table td{padding:5px 3px}
+#card-live-risk .star-table{font-size:11px}
+#card-live-risk .star-table th{font-size:10px;padding:5px 3px}
+#card-live-risk .star-table td{padding:5px 3px}
+.risk-ok{color:#8FAE7C;font-weight:600}
+.risk-warn{color:#D9A05B;font-weight:600}
+.risk-danger{color:#C96F4A;font-weight:600}
+/* 合格得分：<1 红、=1 绿（集约站阈值 0.1）；需高于 .star-table .num 的 color 优先级 */
+.star-table .num.score-green{color:#8FAE7C;font-weight:600}
+.star-table .num.score-red{color:#C96F4A;font-weight:600}
+/* 夜宵骑手：绿色文本 */
+.night-green{color:#8FAE7C;font-weight:600}
+/* 实时低效人数：号码牌（数字加框，中轴居中、整体靠上） */
+.low-eff-body{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:20px 10px 4px;min-height:0}
+.low-eff-box{border:2px solid rgba(255,217,120,.65);border-radius:10px;padding:14px 28px;background:rgba(255,217,120,.06);box-shadow:0 0 24px rgba(255,217,120,.15), inset 0 0 18px rgba(255,217,120,.08)}
+.low-eff-num{font-size:72px;font-weight:700;color:#FFD978;font-variant-numeric:tabular-nums;line-height:1}
+.low-eff-foot{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:-6px;padding:0 10px 12px}
+#btnLowEff{padding-top:12px;padding-bottom:12px}
+.low-eff-note{font-size:11px;color:#9C9178;letter-spacing:.5px;white-space:nowrap}
+.low-eff-total{margin-top:10px;text-align:center;font-size:12.5px;color:#C9B98C;letter-spacing:1px}
+.modal-actions{display:flex;gap:8px;align-items:center}
+.modal-panel{
+  width:min(1000px,94vw);max-height:78vh;overflow:hidden;
+  background:#332C21;border:1px solid var(--card-line);border-radius:10px;
+  padding:16px 18px;display:flex;flex-direction:column;gap:12px;
+  box-shadow:0 12px 40px rgba(0,0,0,.5);
+}
+.modal-head{display:flex;justify-content:space-between;align-items:center}
+.modal-head h3{margin:0;font-size:16px;color:var(--brand)}
+.modal-close{background:none;border:none;color:var(--brand);font-size:20px;cursor:pointer;line-height:1;padding:2px 8px}
+.modal-close:hover{color:#E6C46A}
+.modal-empty{color:var(--text-2);text-align:center;padding:24px 0;font-size:13px}
+.chart{flex:1;min-height:262px}
+/* 非公违规数据：号码牌子卡片 */
+.violation-body{display:flex;gap:12px;align-items:stretch}
+.violation-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  padding:16px 8px;min-height:104px;border-radius:12px;
+  background:linear-gradient(165deg,rgba(232,213,172,.06),rgba(232,213,172,.015));
+  border:1px solid var(--card-line);position:relative;overflow:hidden;
+  transition:border-color .25s ease}
+.violation-item:hover{border-color:rgba(201,169,106,.55)}
+.violation-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(232,213,172,.55),transparent)}
+.violation-num{font-size:38px;font-weight:800;line-height:1;color:#F0DFB4;
+  text-shadow:0 0 14px rgba(232,213,172,.45),0 2px 4px rgba(0,0,0,.45);
+  font-variant-numeric:tabular-nums}
+.violation-name{font-size:12.5px;color:var(--text-2);text-align:center;letter-spacing:.5px}
+#chart-channel{min-height:300px}
+
+/* ===== KPI 指标卡 ===== */
+.kpi-card{
+  position:relative;
+  background:var(--card-bg);border:1px solid var(--card-line);
+  border-radius:12px;box-shadow:var(--card-shadow);
+  padding:18px 20px;overflow:hidden;
+  transition:transform .18s ease,box-shadow .18s ease,background .25s ease;
+}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(16,24,40,.12)}
+.kpi-label{font-size:13px;color:var(--text-2);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.kpi-label > span:first-child{min-width:0;flex:1;line-height:1.4}
+.kpi-label .badge{font-size:11px;padding:1px 8px;border-radius:999px;background:var(--brand-soft);color:var(--brand);max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kpi-value{
+  font-size:30px;font-weight:700;line-height:1.25;margin-top:6px;
+  font-variant-numeric:tabular-nums;letter-spacing:.5px;
+  text-shadow:var(--value-glow);
+}
+.kpi-value-text{
+  font-size:16px;font-weight:600;line-height:1.5;margin-top:14px;
+  color:var(--text-2);letter-spacing:.5px;
+}
+.kpi-unit{font-size:13px;font-weight:400;color:var(--text-3);margin-left:3px}
+.kpi-delta{margin-top:8px;font-size:12.5px;display:flex;align-items:center;gap:6px}
+.kpi-delta .up{color:var(--up);font-weight:600}
+.kpi-delta .down{color:var(--down);font-weight:600}
+.kpi-delta .kpi-sub{color:var(--text-3)}
+.kpi-spark{position:absolute;right:0;bottom:0;width:116px;height:48px;pointer-events:none}
+
+/* ===== 星级看板表格 ===== */
+.star-table-wrap{flex:1;overflow:auto;border-radius:8px}
+.star-table{width:100%;border-collapse:collapse;font-size:13px}
+.star-table th{
+  text-align:center;color:var(--text-3);font-weight:500;font-size:12px;
+  padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;
+  position:sticky;top:0;background:rgba(50,43,31,.9);
+}
+.star-table td{padding:9px 10px;border-bottom:1px solid var(--soft);white-space:nowrap;text-align:center}
+.star-table tbody tr:nth-child(odd){background:rgba(255,255,255,.03)}
+.star-table tbody tr:nth-child(even){background:rgba(0,0,0,.10)}
+.star-table tbody tr:nth-child(odd):hover{background:rgba(212,180,131,.12)}
+.star-table tbody tr:nth-child(even):hover{background:rgba(212,180,131,.12)}
+.star-table .rank{color:var(--text-3);width:44px;font-variant-numeric:tabular-nums}
+.star-table .rank.top{color:var(--brand);font-weight:700}
+.star-table .site{color:var(--text-1);font-weight:500;text-align:left}
+.star-table .stars{color:var(--brand);letter-spacing:1px}
+.star-table .star-off{color:rgba(201,169,106,.28)}
+.star-table .num{text-align:center;font-variant-numeric:tabular-nums;color:var(--text-2)}
+.star-table .up{color:var(--up);font-weight:600}
+.star-table .down{color:var(--down);font-weight:600}
+.star-table .warn{color:#E6C46A;font-weight:600}
+.star-table .warn-red{color:#E08A72;font-weight:600}
+/* 体验分环比箭头：绿升/红降/黄平 */
+.arr{font-style:normal}
+.arr-up{color:var(--up)}
+.arr-down{color:var(--down)}
+.arr-flat{color:#E6C46A}
+
+/* ===== 页脚 ===== */
+.footer{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;
+  padding:6px 4px 18px;font-size:12px;color:var(--footer-c);
+}
+
+/* ===== Toast ===== */
+.toast{
+  position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(16px);
+  background:var(--toast-bg);color:var(--toast-c);
+  font-size:13px;padding:9px 18px;border-radius:99px;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;pointer-events:none;
+  transition:opacity .25s ease,transform .25s ease;z-index:99;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== 响应式 ===== */
+@media (max-width:1280px){
+  .span-9,.span-8,.span-7,.span-5,.span-4,.span-3{grid-column:span 6}
+  /* 精排预估（10列）/实时风险两卡窄屏改整行，避免横向滚动 */
+  #card-today-plan,#card-live-risk{grid-column:span 12}
+}
+@media (max-width:960px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .span-9,.span-8,.span-7,.span-6,.span-5,.span-4,.span-3{grid-column:span 12}
+  .chart{min-height:300px}
+}
+/* 预留占位卡：虚线描边、低透明度，弱化存在感 */
+.card.reserve{border-style:dashed;border-color:rgba(201,169,106,.22);background:rgba(255,255,255,.015)}
+.card.reserve::before,.card.reserve::after{opacity:.25}
+.reserve-body{
+  flex:1;min-height:262px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-3);font-size:13px;letter-spacing:2px;
+  border:1px dashed rgba(201,169,106,.18);border-radius:8px;
+}
+@media (max-width:600px){
+  .kpi-grid{grid-template-columns:1fr}
+  .topbar{padding:0 14px}
+  .brand .sub{display:none}
+  .clock{display:none}
+  .nav-row{padding:12px 14px 10px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+<!-- 看板数据源：实时低效人数（由 build_dashboard_source.py 自动生成；缺失时看板回退种子数据） -->
+<script src="data/loweff.js"></script>
+<!-- 看板数据源：实时8小时风险（由 build_dashboard_8h.py 自动生成；缺失时看板回退种子数据） -->
+<script src="data/risk8h.js"></script>
+<!-- 看板数据源：今日精排预估（由 build_dashboard_plan.py 自动生成；缺失时看板回退种子数据） -->
+<script src="data/plan.js"></script>
+<!-- 看板数据源：明日分时段出勤率（由 build_dashboard_attr.py 自动生成；缺失时看板回退种子数据） -->
+<script src="data/attr.js"></script>
+<!-- 看板数据源：实况KPI四卡（由 build_dashboard_kpi.py 自动生成；缺失时看板回退种子数据） -->
+<script src="data/kpi.js"></script>
+<!-- 看板数据源：复盘总览KPI四卡（由 build_dashboard_fupan.py 自动生成；缺失时看板回退种子数据） -->
+<script src="data/fupan.js"></script>
+<!-- 看板数据源：星级看板（由 build_dashboard_star.py 自动生成；缺失时看板回退种子数据） -->
+<script src="data/star.js"></script>
+<script src="data/pay.js"></script>
+<script src="data/exp.js"></script>
+<script src="data/ratio.js"></script>
+<script src="data/vio.js"></script>
+<script src="data/channel.js"></script>
+<script src="data/tenure.js"></script>
+<script src="data/cycle.js"></script>
+<script src="data/retain.js"></script>
+<script src="data/safety.js"></script>
+</head>
+<body>
+
+<!-- ===== 顶部栏 ===== -->
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">
+      <svg viewBox="0 0 32 32" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M11 14 C9 6.5 6.5 4.5 9 3 C11.5 1.5 13.5 6 13.5 10"/>
+        <path d="M21 14 C23 6.5 25.5 4.5 23 3 C20.5 1.5 18.5 6 18.5 10"/>
+        <ellipse cx="16" cy="19" rx="9" ry="8"/>
+        <circle cx="12.5" cy="18" r="1.3" fill="currentColor" stroke="none"/>
+        <circle cx="19.5" cy="18" r="1.3" fill="currentColor" stroke="none"/>
+        <path d="M15 20.5 L17 20.5 L16 22 Z" fill="currentColor" stroke="none"/>
+        <path d="M16 22.2 C15.2 23.4 14.1 23.6 13.4 23.1"/>
+        <path d="M16 22.2 C16.8 23.4 17.9 23.6 18.6 23.1"/>
+        <path d="M9 19 L5 18.4"/>
+        <path d="M9 21 L5 21.6"/>
+        <path d="M23 19 L27 18.4"/>
+        <path d="M23 21 L27 21.6"/>
+      </svg>
+    </div>
+    <div>
+      <h1>江苏飞兔配送服务有限公司-数据系统测试版v1.0</h1>
+      <div class="sub" id="updateInfo">数据更新：2026年08月05日·身材最好长得最帅的飞兔彭于晏创建</div>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="icon-btn" id="btn-auto" title="模拟自动刷新（每5秒）" aria-label="模拟自动刷新">
+      <svg id="icon-play" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      <svg id="icon-pause" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-refresh" title="手动刷新（模拟）" aria-label="手动刷新">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+    </button>
+    <div class="clock" id="clock">----</div>
+    <div class="avatar" title="江苏飞兔配送服务有限公司">
+      <svg viewBox="0 0 32 32" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M11 14 C9 6.5 6.5 4.5 9 3 C11.5 1.5 13.5 6 13.5 10"/>
+        <path d="M21 14 C23 6.5 25.5 4.5 23 3 C20.5 1.5 18.5 6 18.5 10"/>
+        <ellipse cx="16" cy="19" rx="9" ry="8"/>
+        <circle cx="12.5" cy="18" r="1.3" fill="currentColor" stroke="none"/>
+        <circle cx="19.5" cy="18" r="1.3" fill="currentColor" stroke="none"/>
+        <path d="M15 20.5 L17 20.5 L16 22 Z" fill="currentColor" stroke="none"/>
+        <path d="M16 22.2 C15.2 23.4 14.1 23.6 13.4 23.1"/>
+        <path d="M16 22.2 C16.8 23.4 17.9 23.6 18.6 23.1"/>
+        <path d="M9 19 L5 18.4"/>
+        <path d="M9 21 L5 21.6"/>
+        <path d="M23 19 L27 18.4"/>
+        <path d="M23 21 L27 21.6"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- ===== 维度导航：视角 → 城市 → 站点 ===== -->
+<div class="nav-row" aria-label="维度下钻">
+  <div class="nav-group">
+    <span class="nav-label">视角</span>
+    <div class="seg" role="tablist" aria-label="视角切换" id="segView">
+      <button type="button" data-view="复盘总览" class="active">复盘总览</button>
+      <button type="button" data-view="实况总览">实况总览</button>
+    </div>
+  </div>
+  <div class="nav-group" id="groupSpan">
+    <span class="nav-label">时间范围</span>
+    <div class="seg" role="tablist" aria-label="复盘时间范围" id="segSpan">
+      <button type="button" data-span="本月" class="active">本月</button>
+      <button type="button" data-span="本周">本周</button>
+      <button type="button" data-span="昨日">昨日</button>
+    </div>
+  </div>
+  <div class="nav-group">
+    <span class="nav-label">城市</span>
+    <div class="seg" role="tablist" aria-label="城市维度" id="segCity">
+      <button type="button" data-city="总览" class="active">总览</button>
+      <button type="button" data-city="济南">济南</button>
+      <button type="button" data-city="淄博">淄博</button>
+    </div>
+  </div>
+  <div class="nav-group" id="groupSite" style="display:none">
+    <span class="nav-label">站点</span>
+    <div class="site-select-wrap">
+      <select class="site-select" id="segSite" aria-label="站点下钻"></select>
+    </div>
+  </div>
+  <button class="benefit-btn" id="btnBenefit" type="button">权益</button>
+</div>
+
+<main class="layout">
+
+  <!-- ===== KPI 指标卡（JS 渲染） ===== -->
+  <section class="kpi-grid" id="kpiGrid" aria-label="核心指标"></section>
+
+  <!-- ===== 图表区 ===== -->
+  <section class="grid-main" aria-label="经营分析图表">
+
+    <div class="card span-9" id="card-attr-plan">
+      <div class="card-head center">
+        <h2>明日分时段出勤率（来源线上排班）</h2>
+      </div>
+      <div class="chart" id="chart-attr-plan"></div>
+    </div>
+
+    <div class="card span-3" id="card-low-eff">
+      <div class="card-head center">
+        <h2>实时低效人数</h2>
+      </div>
+      <div class="low-eff-body" id="lowEffBody"></div>
+      <div class="low-eff-foot">
+        <button class="pay-btn" id="btnLowEff" type="button">实时低效明细</button>
+        <div class="low-eff-note">【数据存在15分钟延迟】</div>
+      </div>
+    </div>
+
+    <div class="card span-8" id="card-today-plan">
+      <div class="card-head center">
+        <h2 id="planTitle">今日精排预估·正常场景</h2>
+        <div class="ratio-actions">
+          <button class="pay-btn active" id="btnWeatherNormal" type="button">正常天气</button>
+          <button class="pay-btn" id="btnWeatherBad" type="button">恶劣天气</button>
+          <button class="pay-btn" id="btnPlanDetail" type="button">查看明细</button>
+        </div>
+      </div>
+      <div class="star-table-wrap" id="todayPlanBody"></div>
+    </div>
+
+    <div class="card span-4" id="card-live-risk">
+      <div class="card-head">
+        <h2>实时8小时风险预估</h2>
+        <button class="pay-btn" id="btnRiDetail" type="button">风险骑手明细</button>
+      </div>
+      <div class="star-table-wrap" id="liveRiskBody"></div>
+    </div>
+
+    <div class="card span-12" id="starCard">
+      <div class="card-head center">
+        <h2 id="starTitle">星级看板</h2>
+        <a class="more" href="javascript:void(0)" data-toast="星级明细页开发中，当前为示例数据">查看详情 ›</a>
+      </div>
+      <div class="star-table-wrap" id="starTable"></div>
+    </div>
+
+    <div class="card span-4" id="card-channel">
+      <div class="card-head center">
+        <h2>入职渠道分布</h2>
+      </div>
+      <div class="chart" id="chart-channel"></div>
+    </div>
+
+    <div class="card span-4" id="card-tenure">
+      <div class="card-head center">
+        <h2>司龄分布</h2>
+      </div>
+      <div class="chart" id="chart-tenure"></div>
+    </div>
+
+    <div class="card span-4" id="card-cycle">
+      <div class="card-head center">
+        <h2>离职周期分布</h2>
+      </div>
+      <div class="chart" id="chart-cycle"></div>
+    </div>
+
+    <div class="card span-12" id="card-pay">
+      <div class="card-head center">
+        <h2 id="payTitle">薪动力达成</h2>
+        <div class="pay-actions" id="payActions"></div>
+      </div>
+      <div class="star-table-wrap" id="payTable"></div>
+    </div>
+
+    <div class="card span-6" id="card-ratio">
+      <div class="card-head center">
+        <h2>8小时占比趋势</h2>
+        <div class="ratio-actions">
+          <button class="pay-btn" id="btnRatioDetail" type="button">站点明细</button>
+        </div>
+      </div>
+      <div class="chart" id="chart-ratio"></div>
+    </div>
+
+    <div class="card span-6" id="card-reserve">
+      <div class="card-head center">
+        <h2>体验看板</h2>
+      </div>
+      <div class="chart" id="chart-exp"></div>
+    </div>
+
+    <div class="card span-12" id="card-violation">
+      <div class="card-head center">
+        <h2>非公违规数据</h2>
+        <div class="violation-actions">
+          <button class="pay-btn" id="btnVioDetail" type="button">违规明细</button>
+        </div>
+      </div>
+      <div class="violation-body" id="violationBody"></div>
+    </div>
+
+    <div class="card span-4" id="card-retain">
+      <div class="card-head center">
+        <h2>留存两项达成指标</h2>
+      </div>
+      <div class="chart" id="chart-retain"></div>
+    </div>
+
+    <div class="card span-8" id="card-safety">
+      <div class="card-head center">
+        <h2>权益项安全逐日趋势</h2>
+        <div class="ratio-actions">
+          <button class="pay-btn active" id="btnHelmet" type="button">戴盔系带</button>
+          <button class="pay-btn" id="btnOverspeed" type="button">路口超速</button>
+        </div>
+      </div>
+      <div class="chart" id="chart-safety"></div>
+    </div>
+
+    <!-- 低效名单弹窗 -->
+    <div class="modal-mask" id="lowModal" style="display:none">
+      <div class="modal-panel">
+        <div class="modal-head">
+          <h3>低效名单</h3>
+          <button class="modal-close" id="lowModalClose" type="button" title="关闭">×</button>
+        </div>
+        <div class="star-table-wrap" id="lowModalBody"></div>
+      </div>
+    </div>
+
+    <!-- 明细详情弹窗 -->
+    <div class="modal-mask" id="detailModal" style="display:none">
+      <div class="modal-panel wide">
+        <div class="modal-head">
+          <h3>明细详情</h3>
+          <div class="modal-actions">
+            <button class="pay-btn" id="btnUndone" type="button">未达成名单</button>
+            <button class="modal-close" id="detailModalClose" type="button" title="关闭">×</button>
+          </div>
+        </div>
+        <div class="star-table-wrap" id="detailModalBody"></div>
+      </div>
+    </div>
+
+    <!-- 体验构成弹窗 -->
+    <div class="modal-mask" id="expModal" style="display:none">
+      <div class="modal-panel wide">
+        <div class="modal-head">
+          <h3 id="expModalTitle">体验构成</h3>
+          <button class="modal-close" id="expModalClose" type="button" title="关闭">×</button>
+        </div>
+        <div class="star-table-wrap" id="expModalBody"></div>
+      </div>
+    </div>
+
+    <!-- 占比明细弹窗（站点明细 / 骑手明细） -->
+    <div class="modal-mask" id="ratioModal" style="display:none">
+      <div class="modal-panel wide">
+        <div class="modal-head">
+          <h3 id="ratioModalTitle">站点明细</h3>
+          <button class="modal-close" id="ratioModalClose" type="button" title="关闭">×</button>
+        </div>
+        <div class="star-table-wrap" id="ratioModalBody"></div>
+      </div>
+    </div>
+
+    <!-- 风险骑手明细弹窗 -->
+    <div class="modal-mask" id="riModal" style="display:none">
+      <div class="modal-panel">
+        <div class="modal-head">
+          <h3>风险骑手明细 <span id="riModalSub"></span></h3>
+          <button class="modal-close" id="riModalClose" type="button" title="关闭">×</button>
+        </div>
+        <div class="star-table-wrap" id="riModalBody"></div>
+      </div>
+    </div>
+
+    <!-- 实时低效明细弹窗 -->
+    <div class="modal-mask" id="lowEffModal" style="display:none">
+      <div class="modal-panel">
+        <div class="modal-head">
+          <h3>实时低效明细 <span id="lowEffModalSub"></span></h3>
+          <button class="modal-close" id="lowEffModalClose" type="button" title="关闭">×</button>
+        </div>
+        <div class="star-table-wrap" id="lowEffModalBody"></div>
+      </div>
+    </div>
+
+    <!-- KPI 明细弹窗（入职/离职预估） -->
+    <div class="modal-mask" id="kpiModal" style="display:none">
+      <div class="modal-panel">
+        <div class="modal-head">
+          <h3 id="kpiModalTitle">明细</h3>
+          <button class="modal-close" id="kpiModalClose" type="button" title="关闭">×</button>
+        </div>
+        <div class="star-table-wrap" id="kpiModalBody"></div>
+      </div>
+    </div>
+
+    <!-- 精排预估明细弹窗 -->
+    <div class="modal-mask" id="planDetailModal" style="display:none">
+      <div class="modal-panel">
+        <div class="modal-head">
+          <h3 id="planDetailTitle">精排预估明细</h3>
+          <button class="modal-close" id="planDetailClose" type="button" title="关闭">×</button>
+        </div>
+        <div class="benefit-city-bar" id="planDetailBar">
+          <button class="pay-btn" data-pd="missAtt" type="button">合格出勤不达标人员</button>
+          <button class="pay-btn" data-pd="missShift" type="button">班次未达成明细</button>
+        </div>
+        <div class="star-table-wrap" id="planDetailBody"></div>
+      </div>
+    </div>
+
+    <!-- 违规明细弹窗（站点维度 / 骑手明细） -->
+    <div class="modal-mask" id="vioModal" style="display:none">
+      <div class="modal-panel">
+        <div class="modal-head">
+          <h3 id="vioModalTitle">违规明细 · <span id="vioModalSub"></span></h3>
+          <button class="modal-close" id="vioModalClose" type="button" title="关闭">×</button>
+        </div>
+        <div class="vio-tabs" id="vioTabs">
+          <button class="vio-tab active" data-tab="site" type="button">站点维度</button>
+          <button class="vio-tab" data-tab="rider" type="button">骑手明细</button>
+        </div>
+        <div class="star-table-wrap" id="vioModalBody"></div>
+      </div>
+    </div>
+
+    <!-- 权益密码弹窗 -->
+    <div class="modal-mask" id="benefitLock" style="display:none">
+      <div class="lock-panel" style="width:min(340px,90vw)">
+        <h3>权益明细</h3>
+        <p class="lock-tip">请输入权益查看密码</p>
+        <input class="lock-input" id="benefitPwd" type="password" placeholder="请输入密码" autocomplete="off" />
+        <button class="pay-btn lock-btn" id="benefitPwdBtn" type="button">确认查看</button>
+        <p class="lock-err" id="benefitPwdErr"></p>
+      </div>
+    </div>
+
+    <!-- 权益明细弹窗 -->
+    <div class="modal-mask" id="benefitModal" style="display:none">
+      <div class="modal-panel">
+        <div class="modal-head">
+          <h3 id="benefitTitle">权益明细</h3>
+          <button class="modal-close" id="benefitModalClose" type="button" title="关闭">×</button>
+        </div>
+        <div class="benefit-city-bar" id="benefitCityBar">
+          <button class="pay-btn" data-city="济南" type="button">济南</button>
+          <button class="pay-btn" data-city="淄博" type="button">淄博</button>
+        </div>
+        <div class="star-table-wrap" id="benefitModalBody"></div>
+      </div>
+    </div>
+
+    <!-- 组织维度密码锁（粉色调兔子主题：长垂耳 + 艺术字） -->
+    <div class="lock-mask" id="lockModal">
+      <div class="lock-panel">
+        <svg class="ear-svg l" viewBox="0 0 60 70" width="60" height="70" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="egL" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#FAD0DF"/><stop offset="1" stop-color="#EE9FBE"/>
+            </linearGradient>
+          </defs>
+          <path d="M22 68 C14 46 14 28 26 8 C40 28 38 48 30 68 Z" fill="url(#egL)" stroke="#FDEFF3" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M26 62 C21 46 21 32 27 18 C34 32 33 48 29 62 Z" fill="#FDEFF3"/>
+        </svg>
+        <svg class="ear-svg r" viewBox="0 0 60 70" width="60" height="70" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="egR" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#FAD0DF"/><stop offset="1" stop-color="#EE9FBE"/>
+            </linearGradient>
+          </defs>
+          <path d="M38 68 C46 46 46 28 34 8 C20 28 22 48 30 68 Z" fill="url(#egR)" stroke="#FDEFF3" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M34 62 C39 46 39 32 33 18 C26 32 27 48 31 62 Z" fill="#FDEFF3"/>
+        </svg>
+        <h3>
+          <span class="t1"><i>✦</i> 又是元气满满的一天 <i>♥</i></span>
+          <span class="t2">加油吧骚年</span>
+          <svg class="squiggle" viewBox="0 0 120 12" width="118" height="10" fill="none" aria-hidden="true">
+            <path d="M2 8 C18 1 30 12 48 6 C66 0 78 11 96 5 C106 2 112 3 118 4" stroke="#EC407A" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
+        </h3>
+        <p class="lock-tip">请输入组织维度密码进入看板</p>
+        <input class="lock-input" id="lockInput" type="password" autocomplete="off" />
+        <button class="pay-btn lock-btn" id="lockBtn" type="button"><span>进入看板</span></button>
+        <p class="lock-err" id="lockErr"></p>
+      </div>
+    </div>
+
+  </section>
+
+  <footer class="footer">
+    <span>数据来源：公司运营数据中台（示例数据，<span id="autoNote">自动刷新已关闭</span>）</span>
+    <span>更新频率：每日 08:00 ｜ 技术支持：江苏飞兔配送服务有限公司 · 数据可视化中心</span>
+  </footer>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ================= 工具 ================= */
+  var fmt = function(v){ return Number(v).toLocaleString('zh-CN'); };
+  var sum = function(a){ return a.reduce(function(s,v){ return s+v; }, 0); };
+  var nowStr = function(){
+    var d = new Date(), p = function(n){ return (n<10?'0':'')+n; };
+    return p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());
+  };
+
+  /* ================= 主题（深卡其色 · 单套配色） ================= */
+  var TH = {
+    axisLabel:'#9C9178', split:'rgba(201,169,106,.14)', axisLine:'rgba(201,169,106,.28)',
+    catLabel:'#C4B79B', legend:'#C4B79B', label:'#C4B79B',
+    center:'#F0E9DA', centerSub:'#9C9178',
+    brand:'#D4B483', brandLight:'#E3CEA4', brandDeep:'#A98A55', profit:'#8FAE7C',
+    barGrad:['#E3CEA4','#A98A55'],
+    topColors:['#D4B483','#C2A270','#AE8F5F','#977B4E','#7C653F'],
+    donut:['#D4B483','#8FAE7C','#D9A05B','#A8987A'],
+    spark:['#D4B483','#8FAE7C','#D9A05B','#A8987A'],
+    pieBorder:'#3D362C', glow:8,
+    tooltip:{backgroundColor:'rgba(46,41,31,.96)',borderColor:'rgba(201,169,106,.3)',borderWidth:1,
+      textStyle:{color:'#EDE6D8',fontSize:12},
+      extraCssText:'border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.45);'}
+  };
+
+  /* ================= 数据层（接真实数据只改这里） ================= */
+  /* ================= 日期工具（复盘口径：截至昨日） ================= */
+  var fmtD = function(d){
+    var p = function(x){ return (x<10?'0':'')+x; };
+    return p(d.getMonth()+1) + '-' + p(d.getDate());
+  };
+  var today = new Date();               /* 今日（示例运行日 2026-08-05） */
+  var yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  /* 本月：当月 1 日 ~ 昨日 */
+  function monthRange(){
+    var start = new Date(today.getFullYear(), today.getMonth(), 1);
+    var a = [], t = new Date(start);
+    while(t <= yesterday){ a.push(fmtD(t)); t.setDate(t.getDate()+1); }
+    if(!a.length) a = [fmtD(yesterday)];
+    return a;
+  }
+  /* 本周：本周一 ~ 昨日（昨日所在周） */
+  function weekRange(){
+    var dow = today.getDay(), off = (dow === 0) ? -6 : 1 - dow;
+    var start = new Date(today.getFullYear(), today.getMonth(), today.getDate() + off);
+    var a = [], t = new Date(start);
+    while(t <= yesterday){ a.push(fmtD(t)); t.setDate(t.getDate()+1); }
+    if(!a.length) a = [fmtD(yesterday)];
+    return a;
+  }
+  var genHours = function(){
+    var a=[]; for(var i=0;i<24;i++){ a.push((i<10?'0':'')+i+':00'); }
+    return a;
+  };
+
+  /* 站点组织（真实站点名单） */
+  var SITES = {
+    '济南': ['江苏飞兔【济南】和谐站','江苏飞兔【济南】领秀城站','江苏飞兔【济南】绿地城站','江苏飞兔【济南】章丘站'],
+    '淄博': ['江苏飞兔【淄博】理工大学站','江苏飞兔【淄博】政务中心站','江苏飞兔【淄博】会展中心站','江苏飞兔【淄博】市中心站','江苏飞兔【淄博】王府井站','江苏飞兔【淄博】吾悦广场站','江苏飞兔【淄博】万达广场站','江苏飞兔【淄博】植物园站','江苏飞兔【淄博】淄川银座站','江苏飞兔【淄博】淄川站','江苏飞兔【淄博】临淄东站','江苏飞兔【淄博】利群站','江苏飞兔【淄博】临淄西站']
+  };
+  /* 站点别名：临淄东站已从星级看板移除，选择时映射为利群站数据 */
+  var SITE_ALIAS = { '江苏飞兔【淄博】临淄东站': '江苏飞兔【淄博】利群站' };
+  /* 城市营收占比（示例口径） */
+  var CITY_SHARES = { '济南': 0.56, '淄博': 0.44 };
+  /* 各城市站点占比（示例口径，与站点名单顺序对应） */
+  var SITE_SHARES = {
+    '济南': [0.28, 0.26, 0.24, 0.22],
+    '淄博': [0.085, 0.08, 0.08, 0.085, 0.08, 0.08, 0.08, 0.075, 0.075, 0.07, 0.07, 0.07, 0.07]
+  };
+
+  /* 示例数据：本月 4 天、本周 2 天（对齐 2026-08-01 ~ 08-04 口径） */
+  var MONTH4 = [17580, 16930, 16470, 17890];
+  var WEEK2 = [16470, 17890];
+  var HOUR24 = [380,340,300,280,260,320,420,560,680,760,810,840,820,860,890,870,910,940,900,840,780,660,540,440];
+  var YDAY24 = [360,330,290,270,250,310,400,540,660,740,790,820,800,840,870,850,890,920,880,820,760,640,520,420];
+
+  var M_RANGE = monthRange(), W_RANGE = weekRange();
+
+  /* 复盘总览：本月 / 本周 / 昨日；实况总览：今日 24 小时 */
+  var BASE = {
+    '复盘总览': {
+      '本月': {
+        x: M_RANGE, rev: MONTH4,
+        order: 243800, cust: 12604,
+        range: M_RANGE[0] + ' ~ ' + M_RANGE[M_RANGE.length-1],
+        deltas: null          /* 本月不显示环比 */
+      },
+      '本周': {
+        x: W_RANGE, rev: WEEK2,
+        order: 61250, cust: 11240,
+        range: W_RANGE[0] + ' ~ ' + W_RANGE[W_RANGE.length-1],
+        deltas: null          /* 本周不显示环比 */
+      },
+      '昨日': {
+        x: genHours(), rev: YDAY24,
+        order: 8340, cust: 9720,
+        range: fmtD(yesterday),
+        deltas:[
+          {d:3.1, t:'较前日', up:true},
+          {d:2.6, t:'较前日', up:true},
+          {d:1.2, t:'较前日', up:true},
+          {d:4.4, t:'较前日', up:true}
+        ]
+      }
+    },
+    '实况总览': {
+      x: genHours(), rev: HOUR24,
+      order: 8420, cust: 9860,
+      range: fmtD(today),
+      deltas:[
+        {d:3.2, t:'较昨日同期', up:true},
+        {d:2.8, t:'较昨日同期', up:true},
+        {d:1.5, t:'较昨日同期', up:true},
+        {d:4.6, t:'较昨日同期', up:true}
+      ]
+    }
+  };
+
+  /* 人员结构占比（示例口径；基数 STAFF_BASE 人，随城市/站点占比联动缩放） */
+  var STAFF_BASE = 12000;
+  var CHANNEL_NAMES = ['人事自招','站点自招','老带新','招聘服务商','线下运营中心'];
+  var CHANNEL_SHARES = [0.26, 0.24, 0.20, 0.18, 0.12];
+  var CHANNEL_COLORS = ['#D4B483','#8FAE7C','#7FA8B8','#C98F4E','#A8987A'];
+  var TENURE_NAMES = ['7天内','14天内','30天内','60天内','90天内','90天以上'];
+  var TENURE_SHARES = [0.15, 0.17, 0.22, 0.18, 0.14, 0.14];
+  var TENURE_COLORS = ['#8FAE7C','#A9C49A','#6E9B5E','#D9A05B','#C98F4E','#A8987A'];
+  var CYCLE_NAMES = ['7天内','30天内','60天内','90天内','1年内','1年以上'];
+  var CYCLE_SHARES = [0.08, 0.16, 0.22, 0.19, 0.24, 0.11];
+  var CYCLE_COLORS = ['#7FA8B8','#5E8FA3','#A8987A','#C98F4E','#D9A05B','#D4B483'];
+
+  /* ================= 本月星级看板（站点维度 · 固定本月口径，不随周期变动） ================= */
+  /* 字段：site 主站名称 / star 当前星级 / score 预估得分 / exp 体验分 / rank 精排预估分 / retain 留存预估分
+     expD 体验分环比(数值) / nScore 正常场景准时率得分 / nRate 正常场景准时率(%) / sScore 特殊场景准时率得分 / sRate 特殊场景准时率(%) */
+  var STAR = {
+    '济南': [
+      {site:'江苏飞兔【济南】和谐站',   star:5, score:95.2450, exp:96.4123, rank:93.8572, retain:94.1268, expD: 2.4,
+       nScore:96.8125, nRate:98.65, sScore:94.3260, sRate:95.12},
+      {site:'江苏飞兔【济南】领秀城站', star:4, score:89.6135, exp:91.2356, rank:88.4127, retain:87.9342, expD: 1.8,
+       nScore:92.1564, nRate:97.82, sScore:90.4312, sRate:93.87},
+      {site:'江苏飞兔【济南】绿地城站', star:4, score:87.3241, exp:89.5074, rank:86.2348, retain:85.8129, expD:-0.6,
+       nScore:90.0735, nRate:97.15, sScore:88.2146, sRate:92.54},
+      {site:'江苏飞兔【济南】章丘站',   star:3, score:82.1087, exp:84.0231, rank:81.3472, retain:80.7156, expD:-1.2,
+       nScore:85.6412, nRate:96.20, sScore:83.1274, sRate:90.31}
+    ],
+    '淄博': [
+      {site:'江苏飞兔【淄博】理工大学站', star:5, score:94.6128, exp:95.8342, rank:93.2406, retain:93.5174, expD: 3.1,
+       nScore:96.0234, nRate:98.72, sScore:93.8520, sRate:95.03},
+      {site:'江苏飞兔【淄博】市中心站',   star:5, score:93.8465, exp:94.9218, rank:92.4183, retain:92.8471, expD: 2.7,
+       nScore:95.3146, nRate:98.45, sScore:92.7681, sRate:94.52},
+      {site:'江苏飞兔【淄博】政务中心站', star:4, score:90.2376, exp:91.5483, rank:89.3125, retain:88.9264, expD: 1.5,
+       nScore:91.8472, nRate:97.60, sScore:89.5230, sRate:93.15},
+      {site:'江苏飞兔【淄博】会展中心站', star:4, score:89.1428, exp:90.3172, rank:88.1246, retain:87.6138, expD: 0.9,
+       nScore:90.7621, nRate:97.28, sScore:88.4156, sRate:92.48},
+      {site:'江苏飞兔【淄博】王府井站',   star:4, score:88.4369, exp:89.7254, rank:87.5163, retain:86.9347, expD: 0.4,
+       nScore:89.9834, nRate:96.95, sScore:87.6320, sRate:91.86},
+      {site:'江苏飞兔【淄博】吾悦广场站', star:4, score:87.6152, exp:88.9471, rank:86.7345, retain:86.1289, expD:-0.3,
+       nScore:89.2478, nRate:96.63, sScore:86.9145, sRate:91.20},
+      {site:'江苏飞兔【淄博】万达广场站', star:4, score:86.9473, exp:88.2146, rank:85.9421, retain:85.4136, expD:-0.8,
+       nScore:88.5136, nRate:96.30, sScore:86.2031, sRate:90.55},
+      {site:'江苏飞兔【淄博】植物园站',   star:3, score:83.5264, exp:85.1487, rank:82.6418, retain:82.0352, expD:-1.1,
+       nScore:85.0247, nRate:95.40, sScore:82.6418, sRate:89.02},
+      {site:'江苏飞兔【淄博】淄川银座站', star:3, score:82.8475, exp:84.4153, rank:81.9346, retain:81.3128, expD:-1.5,
+       nScore:84.3619, nRate:95.05, sScore:81.9875, sRate:88.46},
+      {site:'江苏飞兔【淄博】淄川站',     star:3, score:81.7269, exp:83.2417, rank:80.8152, retain:80.2473, expD:-2.0,
+       nScore:83.5784, nRate:94.68, sScore:81.1230, sRate:87.83},
+      {site:'江苏飞兔【淄博】利群站',     star:3, score:80.2374, exp:81.8462, rank:79.3185, retain:78.7461, expD:-2.6,
+       nScore:82.1937, nRate:93.92, sScore:79.8164, sRate:86.58},
+      {site:'江苏飞兔【淄博】临淄西站',   star:3, score:79.8541, exp:81.2365, rank:78.9432, retain:78.4126, expD:-1.8,
+       nScore:81.7246, nRate:93.51, sScore:79.3281, sRate:86.15}
+    ]
+  };
+
+  /* 星级表格：总览 = 全部站点，城市 = 该市站点；按预估得分降序；不随周期变动 */
+  function renderStarTable(){
+    /* 真实数据源优先：data/star.js（16站：济南4+淄博12；集约2站隐藏；临淄东走别名） */
+    var src = (window.STAR_DATA && STAR_DATA.data) ? STAR_DATA.data : STAR;
+    var rows = (state.city === '总览')
+      ? src['济南'].concat(src['淄博'])
+      : src[state.city];
+    if(!rows){ rows = []; }
+    /* 三级站点：仅展示所选站点（临淄东站→利群站别名） */
+    if(state.site){
+      rows = rows.filter(function(r){ return r.site === (SITE_ALIAS[state.site] || state.site); });
+    }
+    rows = rows.slice().sort(function(a,b){ return (b.score||0) - (a.score||0); });
+    if(!rows.length){
+      document.getElementById('starTable').innerHTML = '<div class="modal-empty">该站点暂无星级数据</div>';
+      return;
+    }
+    /* null 兜底：精排/留存预估分暂无数据源、体验分环比待前日星级 → 显示 — */
+    function num4(v){ return (v === null || v === undefined) ? '—' : v.toFixed(4); }
+    function pct2(v){ return (v === null || v === undefined) ? '—' : v.toFixed(2) + '%'; }
+    var html = '<table class="star-table"><thead><tr>'
+      + '<th>主站名称</th><th>当前星级</th><th>预估得分</th><th>体验分</th><th>精排预估分</th><th>留存预估分</th><th>体验分环比</th>'
+      + '<th>正常场景准时率得分</th><th>正常场景准时率</th><th>特殊场景准时率得分</th><th>特殊场景准时率</th>'
+      + '</tr></thead><tbody>';
+    rows.forEach(function(r){
+      var stars = '';
+      var st = r.star || 0;
+      for(var s=1;s<=5;s++){
+        stars += (s <= st) ? '<span class="star-on">★</span>' : '<span class="star-off">☆</span>';
+      }
+      var expHtml;
+      if(r.expD === null || r.expD === undefined){
+        expHtml = '<span class="kpi-sub">—</span>';
+      } else {
+        var down = r.expD < 0, flat = r.expD === 0;
+        expHtml = '<span class="'+(down?'down':'up')+'">'
+          + '<span class="arr '+(down?'arr-down':(flat?'arr-flat':'arr-up'))+'">'+(down?'▼':(flat?'—':'▲'))+'</span> '
+          + Math.abs(r.expD).toFixed(4)+'</span>';
+      }
+      html += '<tr>'
+        + '<td class="site">'+r.site+'</td>'
+        + '<td class="stars">'+stars+'</td>'
+        + '<td class="num">'+num4(r.score)+'</td>'
+        + '<td class="num">'+num4(r.exp)+'</td>'
+        + '<td class="num">'+num4(r.rank)+'</td>'
+        + '<td class="num">'+num4(r.retain)+'</td>'
+        + '<td class="num">'+expHtml+'</td>'
+        + '<td class="num">'+num4(r.nScore)+'</td>'
+        + '<td class="num">'+pct2(r.nRate)+'</td>'
+        + '<td class="num">'+num4(r.sScore)+'</td>'
+        + '<td class="num">'+pct2(r.sRate)+'</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('starTable').innerHTML = html;
+  }
+
+  /* ================= 三级下钻状态 ================= */
+  var state = { view:'复盘总览', span:'本月', city:'总览', site:null, safetyType:'helmet', weather:'normal' };
+  var jitterF = 1; /* 模拟刷新抖动系数 */
+  var sparkCharts = [], pieCharts = {}, trendChart = null, expChart = null, autoTimer = null, retainChart = null, safetyChart = null;
+
+  function getScale(){
+    var s = 1;
+    if(state.city !== '总览') s *= CITY_SHARES[state.city];
+    if(state.site){
+      /* 饼图/KPI 使用所选站点自身占比（临淄东站用自身数据，别名仅作用于星级看板） */
+      s *= SITE_SHARES[state.city][SITES[state.city].indexOf(state.site)];
+    }
+    return s;
+  }
+  function getData(){
+    /* 实况 KPI 真实数据源优先：data/kpi.js（今日单量/有完成单人数/入职/离职 + 单量环比；趋势序列仍用种子） */
+    if(state.view === '实况总览' && window.KPI_DATA && KPI_DATA.bySite){
+      var agg = { orderToday: 0, orderYday: 0, riders: 0, hire: 0, leave: 0 };
+      liveSites().forEach(function(s){
+        var d = KPI_DATA.bySite[s];
+        if(!d) return;
+        agg.orderToday += d.orderToday || 0; agg.orderYday += d.orderYday || 0;
+        agg.riders += d.riders || 0; agg.hire += d.hire || 0; agg.leave += d.leave || 0;
+      });
+      var delta = (agg.orderYday > 0) ? Math.round((agg.orderToday - agg.orderYday) / agg.orderYday * 10000) / 100 : null;
+      var b = BASE['实况总览'];
+      var scale = getScale() * jitterF;
+      var rev = b.rev.map(function(v){ return Math.max(1, Math.round(v*scale)); });
+      return {
+        x: b.x, rev: rev,
+        t: { rev: agg.orderToday, profit: agg.riders },
+        order: agg.hire, cust: agg.leave,
+        deltas: [
+          (delta === null) ? null : { d: Math.abs(delta), t: '较昨日', up: delta >= 0 },
+          null,   /* 有完成单人数环比：实时运力无昨日口径，暂不显示 */
+          null, null
+        ]
+      };
+    }
+    /* 复盘总览 KPI 真实数据源优先：data/fupan.js
+       服务费总额(剔除活动激励金)不随时间范围变化（随维度变化）；完成单量/日均有单人数/净增随 维度×时间范围
+       合并口径：集约理工→理工(单量/日均/净增合并)、集约政务→政务(单量/日均/净增合并)、临淄东→利群(服务费合并) */
+    if(state.view === '复盘总览' && window.FUPAN_DATA && FUPAN_DATA.agg){
+      var d0 = null, fee = null, notes = null, mainText = null;
+      if(state.site){
+        var note = (FUPAN_DATA.mergeNote && FUPAN_DATA.mergeNote[state.site]) || {};
+        var mainSite = state.site;
+        if(note.kpi){
+          mainSite = note.kpi;
+          notes = {};
+          notes[1] = notes[2] = notes[3] = '合并计入' + shortName(note.kpi);
+        }
+        if(note.serviceFee){
+          notes = notes || {};
+          notes[0] = '合并计入' + shortName(note.serviceFee);
+          /* 服务费合并站（如临淄东→利群）：主值直接显示合并提示文本，不显示数字 */
+          mainText = mainText || {};
+          mainText[0] = '合并计入' + shortName(note.serviceFee);
+        }
+        var bd = FUPAN_DATA.bySite[mainSite];
+        if(bd){ d0 = bd[state.span]; }
+        if(FUPAN_DATA.serviceFeeDetail && FUPAN_DATA.serviceFeeDetail[state.site]){
+          fee = FUPAN_DATA.serviceFeeDetail[state.site];
+        } else if(note.serviceFee && FUPAN_DATA.serviceFeeDetail && !mainText){
+          fee = FUPAN_DATA.serviceFeeDetail[note.serviceFee] || null;
+        } else {
+          fee = null;
+        }
+      } else if(FUPAN_DATA.agg[state.city]){
+        d0 = FUPAN_DATA.agg[state.city][state.span];
+        fee = d0.serviceFee || null;
+      }
+      if(d0){
+        var b2 = BASE['复盘总览'][state.span];
+        return {
+          x: b2.x, rev: b2.rev,
+          t: { rev: fee, profit: d0.finish },
+          order: d0.avgRider, cust: d0.net,
+          deltas: null,   /* 服务费固定值无环比；其余三项暂无环比口径 */
+          notes: notes,   /* 合并提示（卡位 → 文案），null=无 */
+          mainText: mainText,   /* 主值直接显示文本（卡位 → 文案，如临淄东服务费），null=正常数字 */
+          range: b2.range
+        };
+      }
+    }
+    var b = (state.view === '实况总览') ? BASE['实况总览'] : BASE['复盘总览'][state.span];
+    var scale = getScale() * jitterF;
+    var rev = b.rev.map(function(v){ return Math.max(1, Math.round(v*scale)); });
+    var t = { rev: sum(rev), profit: Math.round(sum(rev)*0.15) };
+    return {
+      x: b.x, rev: rev, t: t,
+      order: Math.max(1, Math.round(b.order*scale)),
+      cust: Math.max(1, Math.round(b.cust*scale)),
+      deltas: b.deltas
+    };
+  }
+  function pathStr(){
+    var p = state.view;
+    if(state.view === '复盘总览') p += ' · ' + state.span;
+    if(state.city !== '总览') p += ' · ' + state.city;
+    if(state.site) p += ' · ' + state.site;
+    return p;
+  }
+
+  /* ================= 权益明细弹窗 ================= */
+  /* 权益项目（示例口径）：只随组织维度缩放（STAFF_BASE×组织占比），与时间维度无关 */
+  var BENEFIT_ITEMS = [
+    { name:'底薪补贴',   desc:'按出勤天数发放的固定补贴',   amount: 800 },
+    { name:'单量激励',   desc:'完成单量阶梯激励金',         amount: 1200 },
+    { name:'准时率奖励', desc:'正常/特殊场景准时率达标奖励', amount: 600 },
+    { name:'星级奖金',   desc:'按站点星级等级发放',         amount: 500 },
+    { name:'保险福利',   desc:'意外险+工伤险月均成本',      amount: 350 },
+    { name:'节日福利',   desc:'节假日补贴与实物福利折算',   amount: 200 }
+  ];
+  /* 权益查看密码（示例口径）：会话内验证一次后免密 */
+  var BENEFIT_PWD = '0326';
+  var benefitUnlocked = false;
+  /* 权益弹窗按钮选中城市（总览权限可切换；null=显示两城市汇总行） */
+  var benefitSelCity = null;
+  /* 按城市取站点：淄博含 2 个集约配送站 */
+  function benefitSites(city){
+    var arr = (SITES[city] || []).slice();
+    if(city === '淄博'){ arr = arr.concat(JIYUE_SITES); }
+    return arr;
+  }
+  /* 权益评分表行：城市汇总行/站点行；种子 'eq#'+组织架构名 */
+  function benefitRows(){
+    var city = state.city, isSite = !!state.site;
+    var rows = [];
+    function pushRow(name, isCity){
+      var r = rng(seedFrom('eq#' + name));
+      rows.push({
+        name: name, isCity: isCity,
+        total: Math.round((80 + r() * 19) * 10) / 10,      /* 总得分 80~99 */
+        exp: Math.round((75 + r() * 23) * 10) / 10,        /* 体验分 75~98 */
+        svc: Math.round((78 + r() * 19) * 10) / 10,        /* 服务质量 78~97 */
+        stock: Math.round((55 + r() * 40) * 10) / 10,      /* 存量贡献度 55~95% */
+        push: Math.round((70 + r() * 28) * 10) / 10,       /* 推单完成率 70~98% */
+        fakeOrder: Math.floor(r() * 4),                    /* 虚假订单 0~3 */
+        fakeRider: Math.floor(r() * 3),                    /* 虚假骑手 0~2 */
+        helmet: Math.round((85 + r() * 15) * 10) / 10,     /* 戴盔系带 85~100% */
+        overspeed: Math.floor(r() * 6)                     /* 路口超速 0~5 次 */
+      });
+    }
+    if(isSite){ pushRow(state.site, false); }
+    else if(city === '总览'){
+      if(benefitSelCity){ pushRow(benefitSelCity, true); benefitSites(benefitSelCity).forEach(function(s){ pushRow(s, false); }); }
+      else { pushRow('济南', true); pushRow('淄博', true); }
+    } else { pushRow(city, true); benefitSites(city).forEach(function(s){ pushRow(s, false); }); }
+    return rows;
+  }
+  function openBenefit(){
+    if(benefitUnlocked){ showBenefitModal(); return; }
+    document.getElementById('benefitPwd').value = '';
+    document.getElementById('benefitPwdErr').textContent = '';
+    document.getElementById('benefitLock').style.display = 'flex';
+    document.getElementById('benefitPwd').focus();
+  }
+  function tryBenefitPwd(){
+    if(document.getElementById('benefitPwd').value.trim() === BENEFIT_PWD){
+      benefitUnlocked = true;
+      document.getElementById('benefitLock').style.display = 'none';
+      showBenefitModal();
+    } else {
+      document.getElementById('benefitPwdErr').textContent = '密码错误，请重试';
+    }
+  }
+  function closeBenefitLock(){
+    document.getElementById('benefitLock').style.display = 'none';
+  }
+  function showBenefitModal(){
+    var org = state.city + (state.site ? ' · ' + state.site : '');
+    document.getElementById('benefitTitle').textContent = '权益明细 · ' + org;
+    /* 城市按钮：总览显示两个（可切换）；城市权限显示单个；站点权限隐藏 */
+    var bar = document.getElementById('benefitCityBar');
+    if(bar){
+      if(state.site){ bar.style.display = 'none'; }
+      else {
+        bar.style.display = 'flex';
+        bar.querySelectorAll('button').forEach(function(b){
+          var c = b.getAttribute('data-city');
+          b.style.display = (state.city === '总览' || c === state.city) ? '' : 'none';
+          b.classList.toggle('active', state.city === '总览' ? (benefitSelCity === c) : (c === state.city));
+        });
+      }
+    }
+    var rows = benefitRows();
+    var html = '<table class="star-table"><thead><tr>'
+      + '<th>组织架构</th><th>总得分</th><th>体验分</th><th>服务质量得分</th><th>存量贡献度</th><th>推单完成率</th><th>虚假订单</th><th>虚假骑手</th><th>戴盔系带</th><th>路口超速</th>'
+      + '</tr></thead><tbody>';
+    rows.forEach(function(x){
+      html += '<tr' + (x.isCity ? ' class="benefit-city-row"' : '') + '>'
+        + '<td class="site">' + (x.isCity ? x.name : siteLabel(x.name)) + '</td>'
+        + '<td class="num">' + x.total.toFixed(1) + '</td>'
+        + '<td class="num">' + x.exp.toFixed(1) + '</td>'
+        + '<td class="num">' + x.svc.toFixed(1) + '</td>'
+        + '<td class="num">' + x.stock.toFixed(1) + '%</td>'
+        + '<td class="num">' + x.push.toFixed(1) + '%</td>'
+        + '<td class="num danger">' + x.fakeOrder + '</td>'
+        + '<td class="num danger">' + x.fakeRider + '</td>'
+        + '<td class="num">' + x.helmet.toFixed(1) + '%</td>'
+        + '<td class="num danger">' + x.overspeed + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('benefitModalBody').innerHTML = html;
+    document.getElementById('benefitModal').style.display = 'flex';
+  }
+  function closeBenefitModal(){
+    document.getElementById('benefitModal').style.display = 'none';
+  }
+
+  /* ================= 组织维度密码锁 ================= */
+  /* 2026-08-07 用户指定密码：总览/城市/站点 独立密码 */
+  var PASSWORD_MAP = {
+    '032604': { level: 'all', city: '总览', site: null },
+    '1416':   { level: 'city', city: '淄博', site: null },
+    '5012':   { level: 'city', city: '济南', site: null },
+    '8555':   { level: 'site', city: '淄博', site: '江苏飞兔【淄博】理工大学站' },
+    '9716':   { level: 'site', city: '淄博', site: '江苏飞兔【淄博】临淄西站' },
+    '0250':   { level: 'site', city: '淄博', site: '江苏飞兔【淄博】临淄东站' },
+    '9006':   { level: 'site', city: '淄博', site: '江苏飞兔【淄博】利群站' },
+    '2228':   { level: 'site', city: '淄博', site: '江苏飞兔【淄博】政务中心站' },
+    '1908':   { level: 'site', city: '淄博', site: '江苏飞兔【淄博】王府井站' },
+    '6900':   { level: 'site', city: '淄博', site: '江苏飞兔【淄博】吾悦广场站' },
+    '5495':   { level: 'site', city: '淄博', site: '江苏飞兔【淄博】万达广场站' },
+    '9297':   { level: 'site', city: '淄博', site: '江苏飞兔【淄博】淄川站' },
+    '5673':   { level: 'site', city: '淄博', site: '江苏飞兔【淄博】市中心站' },
+    '1026':   { level: 'site', city: '淄博', site: '江苏飞兔【淄博】淄川银座站' },
+    '1681':   { level: 'site', city: '淄博', site: '江苏飞兔【淄博】会展中心站' },
+    '1585':   { level: 'site', city: '淄博', site: '江苏飞兔【淄博】植物园站' },
+    '101':    { level: 'site', city: '济南', site: '江苏飞兔【济南】和谐站' },
+    '202':    { level: 'site', city: '济南', site: '江苏飞兔【济南】领秀城站' },
+    '303':    { level: 'site', city: '济南', site: '江苏飞兔【济南】绿地城站' },
+    '404':    { level: 'site', city: '济南', site: '江苏飞兔【济南】章丘站' }
+  };
+  /* 当前权限作用域：null=未解锁；{level:'all'} 全维度；{level:'city',city} 单城市；{level:'site',city,site} 单站点 */
+  var perm = null;
+  function tryUnlock(){
+    var code = document.getElementById('lockInput').value.trim();
+    var target = PASSWORD_MAP[code];
+    var err = document.getElementById('lockErr');
+    if(!target){ err.textContent = '密码错误，请重试'; return; }
+    err.textContent = '';
+    document.getElementById('lockModal').style.display = 'none';
+    perm = (target.level === 'all') ? { level: 'all' } : { level: target.level, city: target.city, site: target.site };
+    state.city = target.city;
+    state.site = target.site;
+    document.querySelectorAll('#segCity button').forEach(function(b){
+      b.classList.toggle('active', b.getAttribute('data-city') === target.city);
+    });
+    renderSiteNav();
+    applyPermUI();
+    renderAll();
+    syncInfo();
+  }
+  /* 按权限隐藏不可见的城市导航按钮 */
+  function applyPermUI(){
+    document.querySelectorAll('#segCity button').forEach(function(b){
+      var c = b.getAttribute('data-city');
+      var show = !(perm && perm.level !== 'all' && c !== perm.city);
+      b.style.display = show ? '' : 'none';
+    });
+  }
+
+  /* ================= 渲染：站点下拉 ================= */
+  function renderSiteNav(){
+    var g = document.getElementById('groupSite');
+    var sel = document.getElementById('segSite');
+    /* 权限作用域（v13.39）：站点级锁定单站；城市级钳制到授权城市 */
+    if(perm && perm.level === 'site'){
+      state.city = perm.city;
+      state.site = perm.site;
+      g.style.display = 'flex';
+      sel.disabled = true;
+      sel.innerHTML = '<option value="'+perm.site+'">'+perm.site+'</option>';
+      sel.value = perm.site;
+      return;
+    }
+    if(perm && perm.level === 'city' && state.city !== perm.city){
+      state.city = perm.city;
+    }
+    if(state.city === '总览'){
+      g.style.display = 'none';
+      state.site = null;
+      return;
+    }
+    var sites = SITES[state.city];
+    /* 切换城市后，若原选中站点不在新城市名单中，则回到城市级 */
+    if(state.site && sites.indexOf(state.site) === -1){ state.site = null; }
+    g.style.display = 'flex';
+    sel.disabled = false;
+    sel.innerHTML = '<option value="">全部站点</option>' + sites.map(function(s){
+      return '<option value="'+s+'">'+s+'</option>';
+    }).join('');
+    sel.value = state.site || '';
+  }
+
+  /* ================= 渲染：KPI ================= */
+  function renderKpis(){
+    var d = getData();
+    var labels, units, vals;
+    if(state.view === '实况总览'){
+      /* 实况口径 */
+      labels = ['今日单量','有完成单人数','入职人数','离职预估'];
+      units = ['单','人','人','人'];
+    } else {
+      /* 复盘口径 */
+      labels = ['服务费总额（剔除活动激励金）','完成单量','日均有单人数','净增人数'];
+      units = ['万元','单','人','人'];
+    }
+    vals = [d.t.rev, d.t.profit, d.order, d.cust];
+    /* 右上角标注：永远显示当前一级名称（总览/济南/淄博），不随维度切换/站点下钻变化 */
+    var badge = state.city;
+    var html = labels.map(function(lab,i){
+      var k = d.deltas ? d.deltas[i] : null;
+      var v = vals[i];
+      var notes = d.notes || null;
+      var mt = d.mainText || null;
+      var deltaHtml;
+      if(mt && mt[i]){
+        /* 主值直接显示文本（如 临淄东站服务费 → 合并计入利群站），无数字 */
+        return '<div class="kpi-card">'
+          + '<div class="kpi-label"><span>'+lab+'</span><span class="badge">'+badge+'</span></div>'
+          + '<div class="kpi-value kpi-value-text">'+mt[i]+'</div>'
+          + '<div class="kpi-delta"></div>'
+          + '<div class="kpi-spark" id="spark-'+(i+1)+'"></div></div>';
+      }
+      if(notes && notes[i]){
+        /* 合并口径提示（如 临淄东站服务费 合并计入利群站） */
+        deltaHtml = '<span class="kpi-sub">' + notes[i] + '</span>';
+      } else if(v === null || v === undefined){
+        /* 真实数据缺失（如服务费 sheet 未更新）：主值显 —，角标提示待数据 */
+        deltaHtml = '<span class="kpi-sub">数据待更新</span>';
+        return '<div class="kpi-card">'
+          + '<div class="kpi-label"><span>'+lab+'</span><span class="badge">'+badge+'</span></div>'
+          + '<div class="kpi-value">—</div>'
+          + '<div class="kpi-delta">'+deltaHtml+'</div>'
+          + '<div class="kpi-spark" id="spark-'+(i+1)+'"></div></div>';
+      }
+      if(state.view === '实况总览' && (i === 2 || i === 3)){
+        /* 实况入职人数/离职预估：环比去掉，改为查看明细按钮 */
+        deltaHtml = '<button class="pay-btn kpi-btn" data-kpi="' + (i === 2 ? 'hire' : 'leave') + '" type="button">查看明细</button>';
+      } else if(k){
+        var cls = k.up ? 'up' : 'down', arrow = k.up ? '↑' : '↓';
+        deltaHtml = '<span class="'+cls+'">'+arrow+' '+k.d+'%</span><span class="kpi-sub">'+k.t+'</span>';
+      } else {
+        deltaHtml = '<span class="kpi-sub">' + d.range + '</span>';
+      }
+      return '<div class="kpi-card">'
+        + '<div class="kpi-label"><span>'+lab+'</span><span class="badge">'+badge+'</span></div>'
+        + '<div class="kpi-value">'+fmt(vals[i])+'<span class="kpi-unit">'+units[i]+'</span></div>'
+        + '<div class="kpi-delta">'+deltaHtml+'</div>'
+        + '<div class="kpi-spark" id="spark-'+(i+1)+'"></div></div>';
+    }).join('');
+    document.getElementById('kpiGrid').innerHTML = html;
+    /* 动态按钮绑定（入职/离职明细） */
+    document.getElementById('kpiGrid').querySelectorAll('.kpi-btn').forEach(function(b){
+      b.addEventListener('click', function(){ openKpiModal(b.getAttribute('data-kpi')); });
+    });
+    renderSparks();
+  }
+
+  /* ================= 渲染：KPI 迷你趋势 ================= */
+  function renderSparks(){
+    var d = getData(), th = TH;
+    var dataSets = [
+      d.rev,
+      d.rev.map(function(v){ return Math.round(v*0.15); }),
+      d.rev.map(function(v,i){ return Math.round(v*(0.5+0.12*Math.sin(i*0.9))); }),
+      d.rev.map(function(v,i){ return Math.round(v*(0.28+0.05*Math.cos(i*0.5))); })
+    ];
+    dataSets.forEach(function(ds,i){
+      var el = document.getElementById('spark-'+(i+1));
+      if(!el) return;
+      var c = sparkCharts[i] || (sparkCharts[i] = echarts.init(el));
+      var mn = Math.min.apply(null, ds) * 0.92;
+      var color = th.spark[i];
+      c.setOption({
+        grid:{left:0,right:0,top:2,bottom:2},
+        xAxis:{type:'category',show:false,boundaryGap:false,data:ds.map(function(_,j){return j;})},
+        yAxis:{type:'value',show:false,min:mn},
+        series:[{
+          type:'line',data:ds,smooth:true,symbol:'none',
+          lineStyle:{width:2,color:color},
+          areaStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[
+            {offset:0,color:color+'4D'},{offset:1,color:color+'00'}
+          ])}
+        }]
+      }, {notMerge:true});
+    });
+  }
+
+  /* ================= 渲染：人员结构饼图（伪3D立体 · 三图各异 · 随城市/站点联动） ================= */
+  /* 木纹随机数：mulberry32 种子伪随机，同扇区稳定、异扇区独立 */
+  function rng(seed){
+    var s = seed >>> 0;
+    return function(){
+      s = (s * 1664525 + 1013904223) >>> 0;
+      return s / 4294967296;
+    };
+  }
+  function seedFrom(str){
+    var h = 0, i;
+    for(i = 0; i < str.length; i++){ h = (h * 31 + str.charCodeAt(i)) >>> 0; }
+    return h;
+  }
+  /* 木质纹理（不规则）：以扇区色为底，按扇区名种子生成独立木纹 */
+  function woodPattern(base, seedStr){
+    var rand = rng(seedFrom(seedStr));
+    var cv = document.createElement('canvas');
+    cv.width = 128; cv.height = 128;
+    var g = cv.getContext('2d');
+    g.fillStyle = base;
+    g.fillRect(0, 0, 128, 128);
+    var dark = echarts.color.lift(base, -(0.22 + rand()*0.25));
+    var light = echarts.color.lift(base, 0.10 + rand()*0.16);
+    var n = 10 + Math.floor(rand()*6);         /* 10~15 条随机木纹 */
+    var i, y;
+    for(i = 0; i < n; i++){
+      y = 4 + rand()*120;
+      g.strokeStyle = (rand() > 0.45) ? dark : light;
+      g.globalAlpha = 0.35 + rand()*0.4;
+      g.lineWidth = 0.5 + rand()*1.3;
+      g.beginPath();
+      g.moveTo(-6, y + (rand()-0.5)*8);
+      g.bezierCurveTo(26, y + (rand()-0.5)*18, 64, y + (rand()-0.5)*22, 134, y + (rand()-0.5)*10);
+      g.stroke();
+    }
+    var knots = 1 + Math.floor(rand()*2);      /* 1~2 个木结 */
+    for(i = 0; i < knots; i++){
+      g.globalAlpha = 0.14 + rand()*0.22;
+      g.fillStyle = dark;
+      g.beginPath();
+      g.ellipse(14 + rand()*100, 14 + rand()*100, 3 + rand()*6, 1.5 + rand()*3, rand()*Math.PI, 0, Math.PI*2);
+      g.fill();
+    }
+    g.globalAlpha = 1;
+    /* ECharts 5：普通对象作为图案色 */
+    return {image: cv, repeat: 'repeat'};
+  }
+
+  /* 入职渠道真实聚合（数据源=可识别入职 sheet，2026-08-07 用户口径）：
+     分母=组织维度行数，分子=招聘一级渠道统计；按 state.city/site 筛选（临淄东独立，不套 SITE_ALIAS） */
+  function channelRealData(){
+    if(!(window.CHANNEL_DATA && CHANNEL_DATA.sites)) return null;
+    var list = [];
+    Object.keys(CHANNEL_DATA.sites).forEach(function(site){
+      var s = CHANNEL_DATA.sites[site];
+      if(state.city !== '总览' && s.city !== state.city) return;
+      if(state.site && site !== state.site) return;
+      list.push(s);
+    });
+    if(!list.length) return null;
+    var sums = {};
+    list.forEach(function(s){
+      Object.keys(s.channels).forEach(function(c){ sums[c] = (sums[c] || 0) + s.channels[c]; });
+    });
+    var arr = Object.keys(sums).map(function(c){ return { name: c, value: sums[c] }; });
+    arr.sort(function(a, b){ return b.value - a.value; });
+    return arr;
+  }
+  /* 司龄真实聚合（数据源=在职明细 sheet，2026-08-07 用户口径）：
+     分母=组织维度行数，分子=入职日期→天数分档；临淄东独立，不套 SITE_ALIAS */
+  function tenureRealData(){
+    if(!(window.TENURE_DATA && TENURE_DATA.sites)) return null;
+    var list = [];
+    Object.keys(TENURE_DATA.sites).forEach(function(site){
+      var s = TENURE_DATA.sites[site];
+      if(state.city !== '总览' && s.city !== state.city) return;
+      if(state.site && site !== state.site) return;
+      list.push(s);
+    });
+    if(!list.length) return null;
+    var sums = {};
+    list.forEach(function(s){
+      Object.keys(s.tenure).forEach(function(k){ sums[k] = (sums[k] || 0) + s.tenure[k]; });
+    });
+    /* 按档位顺序输出（7天内→90天以上），缺失档位补 0 */
+    return TENURE_NAMES.map(function(k){ return { name: k, value: sums[k] || 0 }; });
+  }
+  /* 离职周期真实聚合（数据源=离职明细 sheet，2026-08-07 用户口径）：
+     分母=组织维度行数，分子=司龄列[10]分档；临淄东独立，不套 SITE_ALIAS */
+  function cycleRealData(){
+    if(!(window.CYCLE_DATA && CYCLE_DATA.sites)) return null;
+    var list = [];
+    Object.keys(CYCLE_DATA.sites).forEach(function(site){
+      var s = CYCLE_DATA.sites[site];
+      if(state.city !== '总览' && s.city !== state.city) return;
+      if(state.site && site !== state.site) return;
+      list.push(s);
+    });
+    if(!list.length) return null;
+    var sums = {};
+    list.forEach(function(s){
+      Object.keys(s.cycle).forEach(function(k){ sums[k] = (sums[k] || 0) + s.cycle[k]; });
+    });
+    return CYCLE_NAMES.map(function(k){ return { name: k, value: sums[k] || 0 }; });
+  }
+  /* 三张人员结构饼图的真实数据入口（渠道/司龄/离职周期） */
+  function pieReal(d){
+    if(d.id === 'chart-channel') return channelRealData();
+    if(d.id === 'chart-tenure') return tenureRealData();
+    if(d.id === 'chart-cycle') return cycleRealData();
+    return null;
+  }
+  function pieOpt(d, scale){
+    var th = TH;
+    var raw = pieReal(d);
+    var data = (raw && raw.length) ? raw : d.names.map(function(n, i){
+      return { name: n, value: Math.max(1, Math.round(STAFF_BASE * d.shares[i] * scale)) };
+    });
+    data = data.map(function(it, i){
+      var base = d.colors[i % d.colors.length];
+      var st = {color: d.texture ? woodPattern(base, d.id + '#' + it.name) : base};
+      if(d.gap){
+        /* 独立切割：弱化投影避免糊缝，加深描边强化切缝 */
+        st.borderColor = '#241F18';
+        st.borderWidth = 1.5;
+        st.borderRadius = 5;
+        st.shadowBlur = 8;
+        st.shadowColor = 'rgba(0,0,0,.28)';
+        st.shadowOffsetY = 3;
+      }
+      it.itemStyle = st;
+      return it;
+    });
+    var total = data.reduce(function(s,it){ return s+it.value; }, 0);
+    var series;
+    if(d.style === 'rings'){
+      /* 单环图条：每档一条环带，12点同起点；弧长=占比×2（长度加倍），透明余量补全实现开弧；
+         仅当弧长达到满圈（占比≥50%）才自然闭环（真实数据优先，按 data 数组驱动） */
+      var R0 = 0.20, T = 0.065, G = 0.026;
+      series = data.map(function(it, i){
+        var inner = R0 + i*(T+G), outer = inner + T;
+        var v = it.value;
+        var frac = total ? v / total : 0;
+        var rv = Math.min(2*frac, 1);   /* 弧长加倍，封顶整圈 */
+        return {
+          type:'pie',
+          radius:[(inner*100).toFixed(2)+'%', (outer*100).toFixed(2)+'%'],
+          center:['50%','40%'],
+          startAngle:90,
+          label:{show:false},
+          emphasis:{scale:false},
+          tooltip:{formatter:function(){ return it.name+'<br/>'+fmt(v)+' 人（'+Math.round(frac*100)+'%）'; }},
+          data:[
+            {name:it.name, value:rv, itemStyle:{color:it.itemStyle ? it.itemStyle.color : d.colors[i % d.colors.length], borderColor:'#29241B', borderWidth:1, borderRadius:4, shadowBlur:14, shadowColor:'rgba(0,0,0,.35)', shadowOffsetY:4}},
+            {name:'', value:1-rv, silent:true,
+             itemStyle:{color:'rgba(0,0,0,0)', borderColor:'rgba(0,0,0,0)', borderWidth:0},
+             tooltip:{show:false}, label:{show:false},
+             emphasis:{scale:false, itemStyle:{color:'rgba(0,0,0,0)'}}}
+          ]
+        };
+      });
+    } else {
+      var geom;
+      if(d.style === 'ring'){
+        geom = {radius:['40%','66%']};
+        if(d.gap){
+          /* 独立切割：每块扇区沿自身中角方向外移留缝；外移加大后收窄半径防裁切 */
+          /* 绝对像素半径：图表区缩放时入职饼图保持原大小 */
+          geom = {center:['50%','44%'], radius:[56, 90]};
+          var R2 = 16, start2 = -Math.PI/2, acc3 = 0;
+          data.forEach(function(it){
+            var frac = it.value / total;
+            var mid = start2 + (acc3 + frac/2) * 2 * Math.PI;
+            acc3 += frac;
+            /* 顶部扇区(中角近正上方)外移收窄，避免弧线/标签出画布 */
+            var off = (Math.sin(mid) < -0.85) ? R2*0.5 : R2;
+            it.center = [(50 + off*Math.cos(mid)).toFixed(2)+'%', (45 + off*Math.sin(mid)).toFixed(2)+'%'];
+          });
+        }
+      } else if(d.style === 'explode'){
+        /* 分离式实心饼：每块扇区沿自身中角方向外移，形成爆炸式立体感 */
+        var R = 7, start = -Math.PI/2, acc2 = 0;
+        data.forEach(function(it){
+          var frac = it.value / total;
+          var mid = start + (acc2 + frac/2) * 2 * Math.PI;
+          acc2 += frac;
+          it.center = [(50 + R*Math.cos(mid)).toFixed(2)+'%', (40 + R*Math.sin(mid)).toFixed(2)+'%'];
+        });
+        geom = {radius:['16%','42%']};
+      } else if(d.style === 'roseRadius'){
+        geom = {radius:['16%','68%'], roseType:'radius'};
+      } else {
+        /* 绝对像素半径：图表区缩放时离职饼图保持原大小 */
+        geom = {radius:[20, 102], roseType:'area'};
+      }
+      series = [Object.assign({
+        type:'pie',center:['50%','40%'],
+        avoidLabelOverlap:true,
+        itemStyle:{
+          borderColor:'rgba(255,255,255,.16)',borderWidth:1,
+          shadowBlur:18,shadowColor:'rgba(0,0,0,.35)',shadowOffsetY:6
+        },
+        label:{show:true,formatter:'{d}%',color:th.label,fontSize:11},
+        labelLine:{length:8,length2:6},
+        data:data
+      }, geom)];
+    }
+    return {
+      tooltip:Object.assign({trigger:'item',formatter:function(p){ return p.name+'<br/>'+fmt(p.value)+' 人（'+p.percent+'%）'; }}, th.tooltip),
+      legend:{
+        bottom:0,left:'center',icon:'circle',itemWidth:8,itemHeight:8,itemGap:10,
+        textStyle:{color:th.legend,fontSize:11},
+        /* 图例仅标注项目名，数据值只在饼图牵引线标注 */
+        data:data.map(function(it){ return it.name; })
+      },
+      series:series
+    };
+  }
+  function renderPies(){
+    var scale = getScale();  /* 随城市/站点联动 */
+    var defs = [
+      {id:'chart-channel', names:CHANNEL_NAMES, shares:CHANNEL_SHARES, colors:CHANNEL_COLORS, style:'ring', texture:true, gap:true},
+      {id:'chart-tenure',  names:TENURE_NAMES,  shares:TENURE_SHARES,  colors:TENURE_COLORS,  style:'rings'},
+      {id:'chart-cycle',   names:CYCLE_NAMES,   shares:CYCLE_SHARES,   colors:CYCLE_COLORS,   style:'roseArea', texture:true}
+    ];
+    defs.forEach(function(d){
+      var el = document.getElementById(d.id);
+      if(!el) return;
+      pieCharts[d.id] = pieCharts[d.id] || echarts.init(el);
+      pieCharts[d.id].setOption(pieOpt(d, scale), {notMerge:true});
+    });
+  }
+
+  /* ================= 渲染：8小时占比趋势 ================= */
+  /* 8小时占比（示例口径）：当日出勤≥8小时的骑手占当日出勤骑手比例；
+     固定本月逐日口径，不随时间范围（本月/本周/昨日）变化；随城市/站点联动微调，种子随机保证稳定
+     Y轴 80%~100%，含 96% 红色虚线标准线；无标记点/无网格；颜色浅→深、线宽细→粗渐变（v13.52） */
+  var RATIO_BASE = { '济南': 0.93, '淄博': 0.905, '总览': 0.915 };
+  /* 8小时占比真实聚合：有单且时长≥8h人数 ÷ 有单人数（数据源=薪动力业务 sheet，2026-08-07 用户口径）
+     按 state.city / state.site 逐日聚合（总览=17站Σ、城市=该市Σ、站点=该站） */
+  function ratioRealAgg(){
+    if(!(window.RATIO_DATA && RATIO_DATA.sites)) return null;
+    var days = RATIO_DATA.days || [];
+    var list = [];
+    Object.keys(RATIO_DATA.sites).forEach(function(site){
+      var s = RATIO_DATA.sites[site];
+      if(state.city !== '总览' && s.city !== state.city) return;
+      if(state.site){
+        var alias = SITE_ALIAS[state.site] || state.site;
+        if(site !== alias) return;
+      }
+      list.push(s);
+    });
+    if(!list.length) return null;
+    var vs = days.map(function(d){
+      var rider = 0, rider8 = 0;
+      list.forEach(function(s){
+        var x = s.daily[d];
+        if(x){ rider += x.rider; rider8 += x.rider8; }
+      });
+      return rider ? Math.round(rider8 / rider * 10000) / 100 : 0;
+    });
+    return { x: days, v: vs };
+  }
+  function ratioData(){
+    var real = ratioRealAgg();
+    if(real) return real;
+    var base = RATIO_BASE[state.city] || 0.915;
+    if(state.site){
+      var si = SITES[state.city].indexOf(state.site);
+      base += ((si % 3) - 1) * 0.005;   /* 站点间 ±0.5pt 差异 */
+    }
+    base *= 1 + (getScale() - 1) * 0.03;  /* 组织占比微调 */
+    /* 围绕基准 ±5pt 波动，偶有单日冲上/跌破标准线 */
+    var vs = M_RANGE.map(function(d){
+      var r = rng(seedFrom('ratio#' + d + '#' + state.city + '#' + (state.site || '')));
+      var v = (base + (r() - 0.5) * 0.10) * 100;
+      return Math.round(Math.min(99.5, Math.max(80, v)) * 100) / 100;
+    });
+    return { x: M_RANGE, v: vs };
+  }
+  /* 颜色插值：hex → rgb 字符串 */
+  function lerpColor(c1, c2, t){
+    var a = [parseInt(c1.slice(1,3),16), parseInt(c1.slice(3,5),16), parseInt(c1.slice(5,7),16)];
+    var b = [parseInt(c2.slice(1,3),16), parseInt(c2.slice(3,5),16), parseInt(c2.slice(5,7),16)];
+    var o = a.map(function(v,i){ return Math.round(v + (b[i]-v)*t); });
+    return 'rgb(' + o[0] + ',' + o[1] + ',' + o[2] + ')';
+  }
+  /* Catmull-Rom 平滑采样：每段细分 sub 份，返回密集点列 */
+  function catmullRom(xs, vs, sub){
+    var ox = [], ov = [], n = xs.length, i, j, t, t2, t3;
+    for(i = 0; i < n - 1; i++){
+      var p0x = xs[Math.max(0, i-1)], p1x = xs[i], p2x = xs[i+1], p3x = xs[Math.min(n-1, i+2)];
+      var p0v = vs[Math.max(0, i-1)], p1v = vs[i], p2v = vs[i+1], p3v = vs[Math.min(n-1, i+2)];
+      for(j = 0; j < sub; j++){
+        t = j / sub; t2 = t * t; t3 = t2 * t;
+        ox.push(0.5 * (2*p1x + (-p0x+p2x)*t + (2*p0x-5*p1x+4*p2x-p3x)*t2 + (-p0x+3*p1x-3*p2x+p3x)*t3));
+        ov.push(0.5 * (2*p1v + (-p0v+p2v)*t + (2*p0v-5*p1v+4*p2v-p3v)*t2 + (-p0v+3*p1v-3*p2v+p3v)*t3));
+      }
+    }
+    ox.push(xs[n-1]); ov.push(vs[n-1]);
+    return { x: ox, v: ov };
+  }
+  function renderRatioTrend(){
+    var el = document.getElementById('chart-ratio');
+    if(!el) return;
+    if(!trendChart) trendChart = echarts.init(el);
+    var d = ratioData();
+    var n = d.x.length;
+    var btnD = document.getElementById('btnRatioDetail');
+    if(btnD){ btnD.textContent = state.site ? '骑手明细' : '站点明细'; }
+    /* 平滑采样：x 用 0..n-1 均匀时间轴，细分后逐段渐变颜色与线宽 */
+    var xs = d.v.map(function(_, i){ return i; });
+    var dense = catmullRom(xs, d.v, 8);
+    var LIGHT = '#E3CEA4', DEEP = '#8A6B3F', W0 = 1.5, W1 = 4.5;
+    var segs = [], i, t, m = dense.x.length - 1;
+    for(i = 0; i < m; i++){
+      t = i / m;   /* 0→左 浅细，1→右 深粗 */
+      var w = W0 + (W1 - W0) * t;
+      segs.push({
+        type: 'line', silent: true,
+        data: [[dense.x[i], dense.v[i]], [dense.x[i+1], dense.v[i+1]]],
+        symbol: 'none', smooth: false,
+        lineStyle: {
+          width: w, color: lerpColor(LIGHT, DEEP, t), cap: 'round',
+          shadowBlur: 10, shadowColor: 'rgba(0,0,0,.5)',
+          shadowOffsetX: 3 + 5 * t,   /* 右移：起始 3px → 末端 8px（加 5px） */
+          shadowOffsetY: 30 * (2 * t - t * t)   /* 下移：加速曲线先快后缓，中段更早下垂、倾斜角更大，末端仍 30px */
+        },
+        emphasis: { disabled: true },
+        tooltip: { show: false },   /* 分段渐变线不参与 tooltip：竖线时只显示 8小时占比 一行（对齐权益项安全卡体验） */
+        z: 2
+      });
+    }
+    trendChart.setOption({
+      tooltip: Object.assign({
+        trigger: 'axis',
+        axisPointer: { type: 'line', snap: true },
+        formatter: function(ps){
+          var p = ps[0];
+          var label = d.x[Math.round(p.value[0])] || p.axisValue;
+          return label + '<br/>8小时占比：<b>' + Number(p.value[1]).toFixed(2) + '%</b>';
+        }
+      }, TH.tooltip),
+      grid: { left: 46, right: 22, top: 26, bottom: 26 },
+      xAxis: {
+        type: 'value', min: 0, max: n - 1, interval: 1,
+        axisLine: { lineStyle: { color: TH.axisLine } },
+        axisTick: { show: false },
+        axisLabel: {
+          color: TH.axisLabel, fontSize: 11,
+          formatter: function(val){ return d.x[Math.round(val)] || ''; }
+        },
+        splitLine: { show: false }
+      },
+      yAxis: {
+        type: 'value', min: 85, max: 100, interval: 5,
+        axisLabel: { color: TH.axisLabel, fontSize: 11, formatter: '{value}%' },
+        splitLine: { show: false }
+      },
+      series: segs.concat([{
+        name: '8小时占比', type: 'line',
+        data: d.v.map(function(v, i){ return [i, v]; }),
+        symbol: 'none', smooth: false,
+        lineStyle: { opacity: 0 },
+        markLine: {
+          silent: true,
+          symbol: 'none',
+          data: [{ yAxis: 96 }],
+          lineStyle: { color: '#C96F4A', type: 'dashed', width: 1.5, cap: 'round' },
+          label: {
+            formatter: '标准线 96%', position: 'insideEndTop',
+            color: '#C96F4A', fontSize: 11
+          }
+        },
+        z: 1
+      }])
+    }, { notMerge: true });
+
+    /* 竖线仅在光标贴近日期点位时显示；迟滞防抖：16px 内显示、32px 外隐藏、中间保持现状，只在状态切换时派发，避免闪烁 */
+    if(!trendChart._ratioHooked){
+      trendChart._ratioHooked = true;
+      var zr = trendChart.getZr();
+      var tipOn = false;
+      zr.on('mousemove', function(e){
+        try{
+          var px = e.offsetX, py = e.offsetY;
+          var pos = trendChart.convertFromPixel({ xAxisIndex: 0 }, [px, py]);
+          if(!pos){
+            if(tipOn){ tipOn = false; trendChart.dispatchAction({ type: 'hideTip' }); }
+            return;
+          }
+          var xVal = pos[0], idx = Math.round(xVal);
+          var gridW = trendChart.getWidth() - 46 - 22;   /* grid left/right */
+          var pxPerDay = (n - 1) > 0 ? gridW / (n - 1) : 1;
+          var distPx = Math.abs(xVal - idx) * pxPerDay;
+          var inRange = (idx >= 0 && idx < n);
+          if(!tipOn && inRange && distPx <= 16){
+            tipOn = true;
+            trendChart.dispatchAction({ type: 'showTip', x: px, y: py });
+          } else if(tipOn && (!inRange || distPx >= 32)){
+            tipOn = false;
+            trendChart.dispatchAction({ type: 'hideTip' });
+          }
+        }catch(err){}
+      });
+      zr.on('mouseout', function(){
+        if(tipOn){ tipOn = false; try{ trendChart.dispatchAction({ type: 'hideTip' }); }catch(err){} }
+      });
+    }
+  }
+
+  /* ================= 渲染：占比明细弹窗（站点明细 / 骑手明细） ================= */
+  /* 单个站点某日 8小时占比（真实优先：有单且≥8h÷有单；缺失回退种子） */
+  function siteRatioVal(site, date){
+    if(window.RATIO_DATA && RATIO_DATA.sites && RATIO_DATA.sites[site] && RATIO_DATA.sites[site].daily[date]){
+      var x = RATIO_DATA.sites[site].daily[date];
+      return x.rider ? Math.round(x.rider8 / x.rider * 10000) / 100 : 0;
+    }
+    var city = (site.indexOf('济南') > -1) ? '济南' : '淄博';
+    var base = RATIO_BASE[city] || 0.915;
+    var si = SITES[city].indexOf(site);
+    base += ((si % 3) - 1) * 0.005;
+    base *= 1 + (getScale() - 1) * 0.03;
+    var r = rng(seedFrom('ratio#' + date + '#' + site));
+    var v = (base + (r() - 0.5) * 0.10) * 100;
+    return Math.round(Math.min(99.5, Math.max(85, v)) * 100) / 100;
+  }
+  /* 站点明细：聚合列；本月/本周/昨日 → 有单人数/未达标人数/8小时占比（占比为周期日均） */
+  function siteDetailHtml(){
+    var sites;
+    if(state.site){
+      sites = [SITE_ALIAS[state.site] || state.site];
+    } else if(state.city === '总览'){
+      sites = SITES['济南'].concat(SITES['淄博']);
+    } else {
+      sites = SITES[state.city];
+    }
+    var pre = (state.span === '本月') ? '本月' : (state.span === '本周' ? '本周' : '昨日');
+    var days = (state.span === '本月') ? M_RANGE : (state.span === '本周' ? W_RANGE : [fmtD(yesterday)]);
+    var html = '<table class="star-table"><thead><tr>'
+      + '<th>站点名称</th><th>' + pre + '有单人数</th><th>' + pre + '未达标人数</th><th>' + pre + '8小时占比</th>'
+      + '</tr></thead><tbody>';
+    /* 真实分支（薪动力业务 sheet：有单=完单>0，未达标=有单且时长<8h；占比=Σ有单且≥8h÷Σ有单） */
+    if(window.RATIO_DATA && RATIO_DATA.sites){
+      /* M_RANGE/W_RANGE 为 MM-DD 格式 → 映射到 RATIO_DATA.days 的 YYYYMMDD */
+      var ym = (RATIO_DATA.dataDate || '').slice(0, 6);
+      var daySet = {};
+      days.forEach(function(d){ daySet[ym + d.slice(3)] = true; });
+      var realDays = RATIO_DATA.days.filter(function(d){ return daySet[d]; });
+      sites.forEach(function(s){
+        var rider = 0, rider8 = 0;
+        realDays.forEach(function(d){
+          var x = RATIO_DATA.sites[s] && RATIO_DATA.sites[s].daily[d];
+          if(x){ rider += x.rider; rider8 += x.rider8; }
+        });
+        var bad = rider - rider8;
+        var ratioAvg = rider ? rider8 / rider * 100 : 0;
+        html += '<tr><td class="site">' + s + '</td>'
+          + '<td class="num">' + fmt(rider) + '</td>'
+          + '<td class="num ' + (bad > 0 ? 'down' : '') + '">' + fmt(bad) + '</td>'
+          + '<td class="num ' + (ratioAvg >= 96 ? 'up' : '') + '">' + ratioAvg.toFixed(2) + '%</td></tr>';
+      });
+      return html + '</tbody></table>';
+    }
+    sites.forEach(function(s){
+      var r = rng(seedFrom('siteCnt#' + state.span + '#' + s));
+      var riders = Math.round(120 + r() * 80);   /* 有单人数 120~200 */
+      var ratio = days.map(function(d){ return siteRatioVal(s, d); });
+      var ratioAvg = ratio.reduce(function(a, b){ return a + b; }, 0) / ratio.length;
+      var bad = Math.round(riders * (1 - ratioAvg / 100) * (0.85 + r() * 0.3));
+      if(bad < 0) bad = 0;
+      html += '<tr><td class="site">' + s + '</td>'
+        + '<td class="num">' + fmt(riders) + '</td>'
+        + '<td class="num ' + (bad > 0 ? 'down' : '') + '">' + fmt(bad) + '</td>'
+        + '<td class="num ' + (ratioAvg >= 96 ? 'up' : '') + '">' + ratioAvg.toFixed(2) + '%</td></tr>';
+    });
+    return html + '</tbody></table>';
+  }
+  /* 骑手明细：仅未达标记录；列：日期/站点名称/骑手姓名/有效时长 */
+  function riderDetailHtml(){
+    var site = SITE_ALIAS[state.site] || state.site;
+    var days = (state.span === '本月') ? M_RANGE : (state.span === '本周' ? W_RANGE : [fmtD(yesterday)]);
+    /* 真实分支（薪动力业务 sheet：有单且时长<8h 的骑手，含姓名映射） */
+    if(window.RATIO_DATA && RATIO_DATA.sites && RATIO_DATA.sites[site]){
+      var ym = (RATIO_DATA.dataDate || '').slice(0, 6);
+      var daySet = {};
+      days.forEach(function(d){ daySet[ym + d.slice(3)] = true; });
+      var realDays = RATIO_DATA.days.filter(function(d){ return daySet[d]; });
+      var rows = [];
+      realDays.forEach(function(d){
+        var x = RATIO_DATA.sites[site].daily[d];
+        if(x && x.bad){
+          x.bad.forEach(function(b){ rows.push({ d: d, site: site, name: b.name || b.id, hours: b.hours }); });
+        }
+      });
+      if(rows.length){
+        var html = '<table class="star-table"><thead><tr>'
+          + '<th>日期</th><th>站点名称</th><th>骑手姓名</th><th>有效时长</th>'
+          + '</tr></thead><tbody>';
+        rows.forEach(function(it){
+          html += '<tr><td class="num">' + it.d + '</td>'
+            + '<td class="site">' + it.site + '</td>'
+            + '<td>' + it.name + '</td>'
+            + '<td class="num down">' + it.hours + ' 小时</td></tr>';
+        });
+        return html + '</tbody></table>';
+      }
+      return '<div class="modal-empty">该站点当前时间范围内无未达标记录</div>';
+    }
+    var rows2 = [];
+    days.forEach(function(d){
+      for(var i = 1; i <= 12; i++){
+        var r = rng(seedFrom('rider#' + site + '#' + d + '#' + i));
+        var ok = r() < 0.9;   /* 约 10% 未达标 */
+        if(!ok){
+          var rh = rng(seedFrom('riderH#' + site + '#' + d + '#' + i));
+          var hours = Math.round((4 + rh() * 3.5) * 10) / 10;   /* 未达标有效时长 4~7.5h */
+          rows2.push({ d: d, site: site, name: '骑手' + (i < 10 ? '0' : '') + i, hours: hours });
+        }
+      }
+    });
+    if(!rows2.length){
+      return '<div class="modal-empty">该站点当前时间范围内无未达标记录</div>';
+    }
+    var html2 = '<table class="star-table"><thead><tr>'
+      + '<th>日期</th><th>站点名称</th><th>骑手姓名</th><th>有效时长</th>'
+      + '</tr></thead><tbody>';
+    rows2.forEach(function(it){
+      html2 += '<tr><td class="num">' + it.d + '</td>'
+        + '<td class="site">' + it.site + '</td>'
+        + '<td>' + it.name + '</td>'
+        + '<td class="num down">' + it.hours + ' 小时</td></tr>';
+    });
+    return html2 + '</tbody></table>';
+  }
+  function openRatioDetail(){
+    var isRider = !!state.site;
+    document.getElementById('ratioModalTitle').textContent =
+      (isRider ? '骑手明细' : '站点明细') + ' · ' + state.span
+      + (state.city !== '总览' ? ' · ' + state.city : '')
+      + (state.site ? ' · ' + state.site : '');
+    var body = document.getElementById('ratioModalBody');
+    body.innerHTML = isRider ? riderDetailHtml() : siteDetailHtml();
+    var mask = document.getElementById('ratioModal');
+    var panel = document.querySelector('#ratioModal .modal-panel');
+    /* 弹窗宽度随表格内容自适应：先显示(隐藏过渡)让表格参与布局再量宽，否则 display:none 下 offsetWidth=0 → 永远回退 480px */
+    mask.style.display = 'flex';
+    mask.style.visibility = 'hidden';
+    var tbl = body.querySelector('table');
+    var w = tbl ? tbl.offsetWidth : 560;
+    if(panel){ panel.style.width = Math.min(Math.max(w + 44, 480), Math.round(window.innerWidth * 0.96)) + 'px'; }
+    mask.style.visibility = '';
+  }
+  function closeRatioModal(){
+    document.getElementById('ratioModal').style.display = 'none';
+  }
+
+  /* ================= 渲染：体验看板（双向横向柱状 + 站点散点） ================= */
+  /* 两个指标：相对准时率（左轴 90~100%，柱向右延伸）/ 配送时长（右轴 15~40分，柱向左延伸）；
+     数据口径：本月=维度总数据；本周/昨日逻辑一致（总数据×周期浮动）；散点=各站点差异；随组织维度联动 */
+  var EXP2_BASE = { p: 93.2, t: 36.5 };
+  /* 体验看板真实聚合：相对准时率 = Σ[46]÷Σ[25]；人效 = Σ[25]÷Σ[33]；出勤率 = Σ[33]÷Σ[28]；
+     配送时长 = Σ([37]×[26])÷Σ[26]；口径 2026-08-07 用户逐步指认；按 state.city / state.site / state.span 聚合 EXP_DATA（数据宝） */
+  function expRealAgg(){
+    if(!(window.EXP_DATA && EXP_DATA.sites && EXP_DATA.order)) return null;
+    var span = state.span || '昨日';
+    var list = [];
+    EXP_DATA.order.forEach(function(site){
+      var s = EXP_DATA.sites[site];
+      if(state.city !== '总览' && s.city !== state.city) return;
+      if(state.site){
+        var alias = SITE_ALIAS[state.site] || state.site;
+        if(site !== alias) return;
+      }
+      var a = s.spans[span];
+      if(a && (a.vol > 0)) list.push({ site: site, a: a });
+    });
+    if(!list.length) return null;
+    var vol = 0, relVol = 0, rider = 0, staff = 0, ndurVol = 0, ndurSum = 0;
+    list.forEach(function(x){
+      vol += x.a.vol; relVol += x.a.relVol; rider += x.a.rider;
+      staff += x.a.staff; ndurVol += x.a.ndurVol; ndurSum += x.a.ndurSum;
+    });
+    var barP = vol ? relVol / vol * 100 : 0;
+    var barT = ndurVol ? ndurSum / ndurVol : 0;
+    var mk = function(site, a){
+      return {
+        site: site,
+        eff: a.rider ? Math.round(a.vol / a.rider * 100) / 100 : 0,
+        att: a.staff ? Math.round(a.rider / a.staff * 10000) / 100 : 0
+      };
+    };
+    var pts;
+    if(state.city === '总览' && !state.site){
+      /* 总览维度：整体单点 */
+      pts = [{
+        site: '集团整体',
+        eff: rider ? Math.round(vol / rider * 100) / 100 : 0,
+        att: staff ? Math.round(rider / staff * 10000) / 100 : 0
+      }];
+    } else {
+      /* 城市/站点维度：各站点（站点维度即该站自身） */
+      pts = list.map(function(x){ return mk(x.site, x.a); });
+    }
+    return { barP: Math.round(barP * 10) / 10, barT: Math.round(barT * 10) / 10, pts: pts };
+  }
+  function expData(){
+    var real = expRealAgg();
+    if(real){
+      return { barP: real.barP, barT: real.barT, rows: real.pts };
+    }
+    return expSeedData();
+  }
+  function expSeedData(){
+    var scale = getScale();
+    var orgKey = state.city + '#' + (state.site || '');
+    /* 维度总数据（本月参照口径，种子稳定） */
+    var rp = rng(seedFrom('expP#' + orgKey));
+    var rt = rng(seedFrom('expT#' + orgKey));
+    var pAll = EXP2_BASE.p * (1 + (rp() - 0.5) * 0.03) * (1 + (scale - 1) * 0.02);
+    var tAll = EXP2_BASE.t * (1 + (rt() - 0.5) * 0.06) * (1 - (scale - 1) * 0.02);
+    /* 本周/昨日逻辑一致：在总数据上按浮动幅度微调（同一公式） */
+    var spanAdj = function(base, seedKey, range){
+      var r = rng(seedFrom(seedKey + '#' + state.span));
+      return base * (1 - range / 2 + r() * range);
+    };
+    var pBar, tBar;
+    if(state.span === '本月'){
+      pBar = pAll; tBar = tAll;
+    } else {
+      pBar = spanAdj(pAll, 'expPspan#' + orgKey, 0.02);   /* 周/日准时率 ±1% */
+      tBar = spanAdj(tAll, 'expTspan#' + orgKey, 0.04);   /* 周/日时长 ±2% */
+    }
+    /* 站点散点：各站相对维度总数据的差异 */
+    var rows = (state.city === '总览')
+      ? STAR['济南'].concat(STAR['淄博'])
+      : STAR[state.city];
+    if(state.site){
+      rows = rows.filter(function(r){ return r.site === (SITE_ALIAS[state.site] || state.site); });
+    }
+    var pts;
+    if(state.site){
+      /* 站点维度：散点即该站自身（与柱一致） */
+      pts = rows.map(function(r){
+        return { site: r.site, p: Math.round(pBar * 10) / 10, t: Math.round(tBar * 10) / 10 };
+      });
+    } else {
+      pts = rows.map(function(r, i){
+        var rn = rng(seedFrom('expP#' + state.city + '#' + (state.site || '') + '#' + i));
+        var rs = rng(seedFrom('expT#' + state.city + '#' + (state.site || '') + '#' + i));
+        return {
+          site: r.site,
+          p: Math.round(pAll * (1 + (rn() - 0.5) * 0.05) * 10) / 10,
+          t: Math.round(tAll * (1 + (rs() - 0.5) * 0.18) * 10) / 10
+        };
+      });
+    }
+    return { barP: pBar, barT: tBar, rows: pts };
+  }
+  /* ================= 体验看板（EXP_DATA 数据源=复盘.xlsx「数据宝」sheet，2026-08-07 用户确认） ================= */
+  /* 主表：站点 | 相对准时率 | 单均配送时长 | 顾客不满意率 | 配送原因投诉率 | 商家评分 | 完成单量；
+     跟随全局周期（昨日/本周/本月），率值按完成单量加权；按相对准时率降序 */
+  function renderExpTable(){
+    var el = document.getElementById('expTable');
+    if(!el) return;
+    if(window.EXP_DATA && EXP_DATA.sites && EXP_DATA.order){
+      var span = state.span || '昨日';
+      var rows = [];
+      EXP_DATA.order.forEach(function(site){
+        var s = EXP_DATA.sites[site];
+        var a = s.spans[span];
+        if(a) rows.push({ site: site, city: s.city, a: a });
+      });
+      if(state.site){
+        var alias = SITE_ALIAS[state.site] || state.site;
+        rows = rows.filter(function(r){ return r.site === alias; });
+      }
+      rows.sort(function(x, y){ return (y.a.rel||0) - (x.a.rel||0); });
+      var html = '<table class="star-table"><thead><tr>'
+        + '<th>站点名称</th><th>相对准时率</th><th>单均配送时长</th><th>顾客不满意率</th><th>配送原因投诉率</th><th>商家评分</th><th>完成单量</th>'
+        + '</tr></thead><tbody>';
+      if(!rows.length){
+        html += '<tr><td class="num" colspan="7">该站点暂无体验数据</td></tr>';
+      }
+      rows.forEach(function(r){
+        var a = r.a;
+        html += '<tr data-site="' + r.site.replace(/"/g, '&quot;') + '" title="点击查看每日明细">'
+          + '<td class="site">' + r.site + '</td>'
+          + '<td class="num">' + (a.rel != null ? (a.rel*100).toFixed(2) + '%' : '—') + '</td>'
+          + '<td class="num">' + (a.dur != null ? a.dur.toFixed(2) + '分' : '—') + '</td>'
+          + '<td class="num">' + (a.dissat != null ? (a.dissat*100).toFixed(3) + '%' : '—') + '</td>'
+          + '<td class="num">' + (a.complain != null ? (a.complain*100).toFixed(3) + '%' : '—') + '</td>'
+          + '<td class="num">' + (a.score != null ? a.score.toFixed(1) : '—') + '</td>'
+          + '<td class="num">' + a.vol + '</td>'
+          + '</tr>';
+      });
+      html += '</tbody></table>';
+      el.innerHTML = html;
+      /* IIFE 作用域内函数无法用内联 onclick 调用 → 事件委托绑定（2026-08-07） */
+      el.querySelectorAll('tr[data-site]').forEach(function(tr){
+        tr.addEventListener('click', function(){ showExpModal(tr.getAttribute('data-site')); });
+      });
+      return;
+    }
+    /* 种子兜底（EXP_DATA 缺失时） */
+    var srows = (state.city === '总览') ? STAR['济南'].concat(STAR['淄博']) : (STAR[state.city] || []);
+    if(state.site){
+      srows = srows.filter(function(r){ return r.site === (SITE_ALIAS[state.site] || state.site); });
+    }
+    var html2 = '<table class="star-table"><thead><tr>'
+      + '<th>站点名称</th><th>相对准时率</th><th>单均配送时长</th><th>顾客不满意率</th><th>配送原因投诉率</th><th>商家评分</th><th>完成单量</th>'
+      + '</tr></thead><tbody>';
+    srows.slice().sort(function(a,b){ return (b.score||0)-(a.score||0); }).forEach(function(r){
+      var rand = rng(seedFrom('exp#' + r.site));
+      var rel = 0.95 + rand()*0.045;
+      var dur = 20 + rand()*12;
+      var dis = rand()*0.003;
+      html2 += '<tr><td class="site">' + r.site + '</td>'
+        + '<td class="num">' + (rel*100).toFixed(2) + '%</td>'
+        + '<td class="num">' + dur.toFixed(2) + '分</td>'
+        + '<td class="num">' + (dis*100).toFixed(3) + '%</td>'
+        + '<td class="num">0.000%</td>'
+        + '<td class="num">—</td>'
+        + '<td class="num">' + Math.round(500 + rand()*4000) + '</td></tr>';
+    });
+    html2 += '</tbody></table>';
+    el.innerHTML = html2;
+  }
+  /* 体验明细弹窗：该站 6 天每日率值明细（数据宝 sheet） */
+  function showExpModal(site){
+    var r = null;
+    if(window.EXP_DATA && EXP_DATA.sites){ r = EXP_DATA.sites[site]; }
+    document.getElementById('expModalTitle').textContent = '体验明细 · ' + site;
+    if(!r || !r.days){
+      document.getElementById('expModalBody').innerHTML = '<div class="modal-empty">暂无该站点体验数据</div>';
+      document.getElementById('expModal').style.display = 'flex';
+      return;
+    }
+    var days = Object.keys(r.days).sort();
+    var html = '<div class="exp-dim-total">每日明细（数据宝·' + (EXP_DATA.dataDate || '') + ' 最新）　周期口径：' + (state.span || '昨日') + ' 率值按完成单量加权</div>';
+    html += '<table class="star-table"><thead><tr><th>日期</th><th>相对准时率</th><th>单均配送时长</th><th>顾客不满意率</th><th>配送原因投诉率</th><th>商家评分</th><th>完成单量</th></tr></thead><tbody>';
+    days.forEach(function(d){
+      var a = r.days[d];
+      var vol = a.vol || 0;
+      var rel = vol ? a.rel_sum / vol : null;
+      var dur = vol ? a.dur_sum / vol : null;
+      var dissat = vol ? a.dissat_sum / vol : null;
+      var complain = vol ? a.complain_sum / vol : null;
+      var score = a.score_ord ? a.score_sum / a.score_ord : null;
+      html += '<tr><td class="site">' + d.slice(4, 6) + '-' + d.slice(6, 8) + '</td>'
+        + '<td class="num">' + (rel != null ? (rel*100).toFixed(2) + '%' : '—') + '</td>'
+        + '<td class="num">' + (dur != null ? dur.toFixed(2) + '分' : '—') + '</td>'
+        + '<td class="num">' + (dissat != null ? (dissat*100).toFixed(3) + '%' : '—') + '</td>'
+        + '<td class="num">' + (complain != null ? (complain*100).toFixed(3) + '%' : '—') + '</td>'
+        + '<td class="num">' + (score != null ? score.toFixed(1) : '—') + '</td>'
+        + '<td class="num">' + vol + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('expModalBody').innerHTML = html;
+    document.getElementById('expModal').style.display = 'flex';
+  }
+  function closeExpModal(){
+    document.getElementById('expModal').style.display = 'none';
+  }
+  function renderExpChart(){
+    var el = document.getElementById('chart-exp');
+    if(!el) return;
+    if(!expChart) expChart = echarts.init(el);
+    var d = expData();
+    var rows = d.rows;
+    var avgP = Math.round(d.barP * 10) / 10;
+    var avgT = Math.round(d.barT * 10) / 10;
+    var pts = expScatterData();
+    /* 柱状渐变：沿柱长方向由透明向实体（左柱左透明→右实体；右柱右透明→左实体） */
+    var gP = new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+      { offset: 0, color: 'rgba(234,217,174,0.12)' }, { offset: 1, color: '#B08D52' }
+    ]);
+    var gT = new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+      { offset: 0, color: '#7C623A' }, { offset: 1, color: 'rgba(201,169,106,0.12)' }
+    ]);
+    expChart.setOption({
+      tooltip: Object.assign({
+        trigger: 'item',
+        formatter: function(p){
+          if(p.seriesType === 'bar'){
+            var v = Number(p.value[0]).toFixed(2);
+            return p.seriesName + '：<b>' + v + (p.seriesName === '相对准时率' ? '%</b>' : '分钟</b>');
+          }
+          var it = pts[p.dataIndex];
+          return it.site + '<br/>人效：<b>' + it.eff.toFixed(2) + '</b><br/>出勤率：<b>' + it.att.toFixed(2) + '</b>';
+        }
+      }, TH.tooltip),
+      legend: { show: false },
+      /* 合并图表区：grid0 左上半（准时率柱）、grid1 右下半（配送时长柱）错落；grid2 覆盖全区域（人效×出勤率散点） */
+      grid: [
+        { left: 20, right: '54%', top: 30, bottom: '52%' },
+        { left: '54%', right: 24, top: '52%', bottom: 10 },
+        { left: 20, right: 24, top: 30, bottom: 10 }
+      ],
+      xAxis: [
+        {
+          type: 'value', gridIndex: 0, min: 90, max: 100, position: 'top',
+          axisLabel: { show: false }, axisLine: { show: false }, axisTick: { show: false }, splitLine: { show: false }
+        },
+        {
+          type: 'value', gridIndex: 1, min: 15, max: 40, inverse: true, position: 'top',
+          axisLabel: { show: false }, axisLine: { show: false }, axisTick: { show: false }, splitLine: { show: false }
+        },
+        {
+          type: 'value', gridIndex: 2, min: 20, max: 50, position: 'bottom',
+          name: '人效', nameLocation: 'middle', nameGap: 20,
+          nameTextStyle: { color: TH.catLabel, fontSize: 11 },
+          axisLabel: { show: false },
+          axisLine: { show: false },
+          axisTick: { show: false },
+          splitLine: { show: false }
+        }
+      ],
+      yAxis: [
+        {
+          type: 'category', gridIndex: 0, data: ['相对准时率'], inverse: true,
+          axisLabel: { show: false },
+          axisLine: { show: false }, axisTick: { show: false }
+        },
+        {
+          type: 'category', gridIndex: 1, data: ['配送时长'], inverse: true,
+          axisLabel: { show: false },
+          axisLine: { show: false }, axisTick: { show: false }
+        },
+        {
+          type: 'value', gridIndex: 2, min: 80, max: 100, inverse: true,
+          name: '出勤率', nameLocation: 'middle', nameGap: 26,
+          nameTextStyle: { color: TH.catLabel, fontSize: 11 },
+          axisLabel: { show: false },
+          axisLine: { show: false },
+          axisTick: { show: false },
+          splitLine: { show: false }
+        }
+      ],
+      series: [
+        {
+          name: '相对准时率', type: 'bar', barWidth: 60, xAxisIndex: 0, yAxisIndex: 0,
+          data: [avgP],
+          itemStyle: { color: gP, borderRadius: [0, 6, 6, 0] },
+          label: { show: true, position: 'top', formatter: '相对准时率：' + avgP.toFixed(2) + '%', color: '#E8D5AC', fontSize: 12, fontWeight: 600 },
+          /* 中间线（上半段）：准时率 100%（两柱分界中线） */
+          markLine: { silent: true, symbol: 'none', label: { show: false }, data: [{ xAxis: 100 }], lineStyle: { color: 'rgba(201,169,106,0.45)', width: 1 } },
+          z: 2
+        },
+        {
+          name: '配送时长', type: 'bar', barWidth: 60, xAxisIndex: 1, yAxisIndex: 1,
+          data: [avgT],
+          itemStyle: { color: gT, borderRadius: [6, 0, 0, 6] },
+          label: { show: true, position: 'top', formatter: '配送时长：' + avgT.toFixed(2) + '分钟', color: '#E8D5AC', fontSize: 12, fontWeight: 600 },
+          /* 中间线（下半段）：配送时长 40 分（=中线），与上半段拼接成完整中线 */
+          markLine: { silent: true, symbol: 'none', label: { show: false }, data: [{ xAxis: 40 }], lineStyle: { color: 'rgba(201,169,106,0.45)', width: 1 } },
+          z: 2
+        },
+        {
+          name: '站点', type: 'scatter', xAxisIndex: 2, yAxisIndex: 2,
+          data: pts.map(function(p){ return [p.eff, p.att]; }),
+          /* 淡蓝气泡：以左下XY交叉（人效20、出勤率100）为原点，越远离越大；径向由内透明向外实 */
+          symbolSize: function(val){
+            var dist = Math.sqrt(Math.pow(val[0] - 20, 2) + Math.pow(val[1] - 100, 2));
+            return (6 + dist * 0.9) * 1.5;
+          },
+          itemStyle: {
+            color: new echarts.graphic.RadialGradient(0.5, 0.5, 0.5, [
+              { offset: 0, color: 'rgba(168,200,224,0.15)' },
+              { offset: 1, color: 'rgba(168,200,224,0.9)' }
+            ])
+          },
+          emphasis: { itemStyle: { color: '#C6DCEA', borderColor: '#FFF', borderWidth: 1 } },
+          z: 5
+        }
+      ]
+    }, { notMerge: true });
+    /* 布局稳定后强制 resize，避免容器尺寸变化导致图表区错位 */
+    setTimeout(function(){
+      if(expChart) expChart.resize();
+    }, 0);
+  }
+
+  /* 散点数据：人效/出勤率，口径与柱状图完全一致——本月=维度总数据；本周/昨日同逻辑浮动；站点维度散点即该站自身 */
+  function expScatterData(){
+    var real = expRealAgg();
+    if(real){
+      /* eff(人效=Σ完成单量÷Σ有完成单骑手数)、att(出勤率=Σ有完成单骑手数÷Σ期末在职骑手数) 已接真实 */
+      return real.pts.map(function(p){
+        return { site: p.site, eff: p.eff, att: p.att };
+      });
+    }
+    return expSeedScatter();
+  }
+  function expSeedScatter(){
+    var scale = getScale();
+    var orgKey = state.city + '#' + (state.site || '');
+    /* 维度总数据（本月口径，种子稳定） */
+    var re = rng(seedFrom('scEff#' + orgKey));
+    var ra = rng(seedFrom('scAtt#' + orgKey));
+    var eAll = 35 * (1 + (re() - 0.5) * 0.4) * (1 + (scale - 1) * 0.03);
+    var aAll = 90 * (1 + (ra() - 0.5) * 0.1) * (1 + (scale - 1) * 0.02);
+    /* 本周/昨日逻辑一致：在总数据上按浮动幅度微调（与柱状图同一公式） */
+    var spanAdj = function(base, seedKey, range){
+      var r = rng(seedFrom(seedKey + '#' + state.span));
+      return base * (1 - range / 2 + r() * range);
+    };
+    var eBar, aBar;
+    if(state.span === '本月'){
+      eBar = eAll; aBar = aAll;
+    } else {
+      eBar = spanAdj(eAll, 'scEffspan#' + orgKey, 0.04);   /* 周/日人效 ±2% */
+      aBar = spanAdj(aAll, 'scAttspan#' + orgKey, 0.02);   /* 周/日出勤率 ±1% */
+    }
+    var rows = (state.city === '总览')
+      ? STAR['济南'].concat(STAR['淄博'])
+      : STAR[state.city];
+    if(state.site){
+      rows = rows.filter(function(r){ return r.site === (SITE_ALIAS[state.site] || state.site); });
+    }
+    var pts;
+    if(state.city === '总览' && !state.site){
+      /* 总览维度：整体数据单点（非站点标识） */
+      pts = [{
+        site: '集团整体',
+        eff: Math.round(eBar * 100) / 100,
+        att: Math.round(aBar * 100) / 100
+      }];
+    } else if(state.site){
+      /* 站点维度：散点即该站自身（与柱一致） */
+      pts = rows.map(function(r){
+        return { site: r.site, eff: Math.round(eBar * 100) / 100, att: Math.round(aBar * 100) / 100 };
+      });
+    } else {
+      /* 城市维度：散点=各站点相对维度总数据的差异 */
+      pts = rows.map(function(r, i){
+        var rn = rng(seedFrom('scEff#' + state.city + '#' + (state.site || '') + '#' + i));
+        var rm = rng(seedFrom('scAtt#' + state.city + '#' + (state.site || '') + '#' + i));
+        return {
+          site: r.site,
+          eff: Math.round(eAll * (1 + (rn() - 0.5) * 0.35) * 100) / 100,
+          att: Math.round(aAll * (1 + (rm() - 0.5) * 0.1) * 100) / 100
+        };
+      });
+    }
+    return pts;
+  }
+
+  /* ================= 渲染：非公违规数据（号码牌） ================= */
+  /* 五个违规类型各占1/5；自底向上求和口径：站点为数据源（每站独立统计），城市=Σ下属站点、总览=Σ全部站点；本月/本周/昨日同口径逐级求和 */
+  var V_BASE = { '虚假点送达': 186, '虚假配送单（含自下）': 143, '违规引导更改地址': 97, '违规引导取消': 76, '虚假骑手': 42 };
+  /* 站点级数量缓存（键: 周期#违规序号#站点）：每站先取整，上级维度=Σ站点整数，求和严格精确 */
+  var vioSiteCache = {};
+  function vioSiteNum(site, span, ki){
+    var key = span + '#' + ki + '#' + site;
+    if(vioSiteCache[key] === undefined){
+      var k = Object.keys(V_BASE)[ki];
+      var totalSites = STAR['济南'].length + STAR['淄博'].length;
+      var r = rng(seedFrom('vioS#' + site + '#' + span + '#' + ki));
+      var m = V_BASE[k] / totalSites * (0.5 + r() * 1.0);
+      var v = m;
+      if(span === '本周'){
+        var rw = rng(seedFrom('vioW#' + site + '#' + ki));
+        v = m * (0.2 + rw() * 0.15);
+      } else if(span === '昨日'){
+        var rd = rng(seedFrom('vioD#' + site + '#' + ki));
+        v = m * (0.03 + rd() * 0.05);
+      }
+      vioSiteCache[key] = Math.round(v);
+    }
+    return vioSiteCache[key];
+  }
+  /* 违规真实聚合（数据源=违规列表 sheet，2026-08-07 用户口径）：
+     仅罚单信息非空算成立；真日期=时间列前一天（引导改址/引导取消/虚假骑手三类例外=当天）；
+     按 state.span(本月/本周/昨日) 聚合 VIO_DATA（总览=17站Σ、城市=该市Σ、站点=该站） */
+  function vioSpanDays(){
+    if(!(window.VIO_DATA && VIO_DATA.days)) return [];
+    var ym = (VIO_DATA.dataDate || '').slice(0, 6);
+    var days = (state.span === '本月') ? M_RANGE : (state.span === '本周' ? W_RANGE : [fmtD(yesterday)]);
+    var set = {};
+    days.forEach(function(d){ set[ym + d.slice(3)] = true; });
+    return VIO_DATA.days.filter(function(d){ return set[d]; });
+  }
+  function vioRealAgg(){
+    if(!(window.VIO_DATA && VIO_DATA.sites)) return null;
+    var days = vioSpanDays();
+    var list = [];
+    Object.keys(VIO_DATA.sites).forEach(function(site){
+      var s = VIO_DATA.sites[site];
+      if(state.city !== '总览' && s.city !== state.city) return;
+      /* 非公违规模块：临淄东与利群不合并（2026-08-07 用户确认），不套用 SITE_ALIAS */
+      if(state.site && site !== state.site) return;
+      list.push(s);
+    });
+    if(!list.length) return null;
+    return (VIO_DATA.types || []).map(function(card){
+      var n = 0;
+      list.forEach(function(s){
+        days.forEach(function(d){
+          var x = s.daily[d] && s.daily[d][card];
+          if(x) n += x.n;
+        });
+      });
+      return { name: card, num: n };
+    });
+  }
+  function violationData(){
+    var real = vioRealAgg();
+    if(real) return real;
+    var sites = (state.city === '总览')
+      ? STAR['济南'].concat(STAR['淄博'])
+      : STAR[state.city];
+    if(state.site){
+      sites = sites.filter(function(r){ return r.site === (SITE_ALIAS[state.site] || state.site); });
+    }
+    var names = Object.keys(V_BASE);
+    var sums = {};
+    names.forEach(function(k){ sums[k] = 0; });
+    sites.forEach(function(s){
+      names.forEach(function(k, ki){
+        sums[k] += vioSiteNum(s.site, state.span, ki);
+      });
+    });
+    return names.map(function(k){
+      return { name: k, num: sums[k] };
+    });
+  }
+  function renderViolation(){
+    var body = document.getElementById('violationBody');
+    if(!body) return;
+    body.innerHTML = violationData().map(function(v){
+      return '<div class="violation-item">'
+        + '<div class="violation-num">' + v.num.toLocaleString('en-US') + '</div>'
+        + '<div class="violation-name">' + v.name + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  /* ================= 今日精排预估·正常场景（实况总览专属） ================= */
+  /* 列：站点名称/预估日得分/应排班人数/有单人数/排班合格得分/午高峰得分/晚高峰得分/合格出勤得分/合格出勤人数/有单合格率
+     固定 24h 实况口径（种子不含周期），随组织维度联动
+     站点源=SITES 全量（含理工大学站/政务中心站/临淄东站），维度筛选到任一站点时该站展示 */
+  var TODAY_PLAN_COLS = ['站点名称','预估日得分','应排班人数','有单人数','排班合格得分','午高峰得分','晚高峰得分','合格出勤得分','合格出勤人数','有单合格率'];
+  /* 看板站点列表：SITES 字符串全量；维度联动 */
+  /* 集约站显示名：去除「江苏飞兔【淄博】」前缀，底层名称不变（仅渲染层映射） */
+  function siteLabel(s){
+    return s.replace('集约配送-江苏飞兔【淄博】', '集约配送-');
+  }
+  /* 站点简称：去掉组织前缀（江苏飞兔【XX】/集约配送-江苏飞兔【XX】）→ 利群站/理工大学站 */
+  function shortName(s){
+    return s.replace(/^集约配送-江苏飞兔【[^】]+】/, '集约配送-').replace(/^江苏飞兔【[^】]+】/, '');
+  }
+  /* 看板站点列表：16 基础站点（SITES）+ 2 个独立集约配送站；维度联动
+     集约站归属淄博；筛选普通站时与其对应集约站成对展示 */
+  var JIYUE_SITES = ['集约配送-江苏飞兔【淄博】理工大学站','集约配送-江苏飞兔【淄博】政务中心站'];
+  /* 集约站 ↔ 普通站成对映射：传入任一站名，返回其成对站名（无则 null） */
+  function jiyueMatch(n){
+    if(n.indexOf('集约配送-') === 0){ return n.slice(5); }
+    var j = '集约配送-' + n;
+    return (JIYUE_SITES.indexOf(j) >= 0) ? j : null;
+  }
+  function liveSites(){
+    var sites;
+    if(state.city === '总览'){
+      sites = SITES['济南'].concat(SITES['淄博']).concat(JIYUE_SITES);
+    } else if(state.city === '淄博'){
+      sites = SITES['淄博'].concat(JIYUE_SITES);
+    } else {
+      sites = SITES[state.city];
+    }
+    if(state.site){
+      var pair = jiyueMatch(state.site);
+      sites = sites.filter(function(n){
+        return n === state.site || (pair && n === pair);
+      });
+    }
+    return sites;
+  }
+  /* 临淄东站与利群站精排数据一致（种子同源） */
+  function planSeedSite(s){
+    return (s === '江苏飞兔【淄博】临淄东站') ? '江苏飞兔【淄博】利群站' : s;
+  }
+  function todayPlanRows(){
+    /* 真实数据源优先：data/plan.js（天气切换 + 维度联动；午/晚高峰不考核时为 null） */
+    if(window.PLAN_DATA && PLAN_DATA['正常'] && PLAN_DATA['正常'].length){
+      var rows = (state.weather === 'bad') ? PLAN_DATA['恶劣'] : PLAN_DATA['正常'];
+      var siteMap = {};
+      rows.forEach(function(r){ siteMap[r.site] = r; });
+      return liveSites().map(function(s){
+        var d = siteMap[s] || { score: 0, staff: 0, order: 0, sched: 0, noon: null, eve: null, att: 0, attN: 0, rate: 0 };
+        var isJi = (s.indexOf('集约配送-') === 0);
+        var cls = function(v){ return (v >= (isJi ? 0.1 : 1)) ? 'score-green' : 'score-red'; };
+        return { site: s, score: d.score, staff: d.staff, order: d.order, sched: d.sched,
+          noon: d.noon, eve: d.eve, att: d.att, attN: d.attN, rate: d.rate, regRate: d.rate,
+          schedCls: cls(d.sched), noonCls: (d.noon === null ? '' : cls(d.noon)),
+          eveCls: (d.eve === null ? '' : cls(d.eve)), attCls: cls(d.att), live: true };
+      });
+    }
+    return liveSites().map(function(s){
+      var r = rng(seedFrom('tp#' + planSeedSite(s)));
+      var staff = Math.round(14 + r() * 26);                 /* 应排班人数 14~40 */
+      var order = Math.round(staff * (0.78 + r() * 0.17));   /* 有单人数 ≈ 应排班 78%~95% */
+      var score = 84 + r() * 15;                             /* 预估日得分 84~99 */
+      /* 四项合格得分：0~1 比率，4位小数；约3%站点满分=1 */
+      var mk = function(){ return (r() > 0.97) ? 1 : Math.round((0.78 + r() * 0.21) * 10000) / 10000; };
+      var sched = mk(), noon = mk(), eve = mk(), att = mk();
+      /* 颜色阈值：集约配送站（前缀「集约配送-」）≥0.1 绿、<0.1 红；普通站 =1 绿、<1 红 */
+      var isJi = (s.indexOf('集约配送-') === 0);
+      var cls = function(v){ return (v >= (isJi ? 0.1 : 1)) ? 'score-green' : 'score-red'; };
+      var attN = Math.round(staff * (0.68 + r() * 0.22) * 10) / 10;   /* 合格出勤人数 1位小数 */
+      var rate = 84 + r() * 15;                              /* 有单合格率 84%~99% */
+      var r2 = rng(seedFrom('tpReg#' + planSeedSite(s)));
+      var regRate = 84 + r2() * 15;                          /* 注册合格率 84%~99%（恶劣天气口径，独立种子） */
+      return { site: s, score: score, staff: staff, order: order, sched: sched, noon: noon, eve: eve, att: att, attN: attN, rate: rate, regRate: regRate,
+        schedCls: cls(sched), noonCls: cls(noon), eveCls: cls(eve), attCls: cls(att) };
+    });
+  }
+  function renderTodayPlan(){
+    var el = document.getElementById('todayPlanBody');
+    if(!el) return;
+    var rows = todayPlanRows();
+    var isBad = (state.weather === 'bad');
+    /* 标题与按钮态联动天气 */
+    var title = document.getElementById('planTitle');
+    if(title) title.textContent = '今日精排预估·' + (isBad ? '恶劣天气' : '正常场景');
+    var bN = document.getElementById('btnWeatherNormal'), bB = document.getElementById('btnWeatherBad');
+    if(bN && bB){ bN.classList.toggle('active', !isBad); bB.classList.toggle('active', isBad); }
+    var cols = TODAY_PLAN_COLS.slice();
+    cols[9] = isBad ? '注册合格率' : '有单合格率';
+    var html = '<table class="star-table"><thead><tr>';
+    cols.forEach(function(c){ html += '<th>' + c + '</th>'; });
+    html += '</tr></thead><tbody>';
+    rows.forEach(function(row){
+      var rate = isBad ? row.regRate : row.rate;
+      html += '<tr><td class="site">' + siteLabel(row.site) + '</td>'
+        + '<td class="num">' + row.score.toFixed(4) + '</td>'
+        + '<td class="num">' + row.staff.toLocaleString('en-US') + '</td>'
+        + '<td class="num">' + row.order.toLocaleString('en-US') + '</td>'
+        + '<td class="num ' + row.schedCls + '">' + row.sched.toFixed(4) + '</td>'
+        + '<td class="num ' + row.noonCls + '">' + (row.noon === null ? '不考核' : row.noon.toFixed(4)) + '</td>'
+        + '<td class="num ' + row.eveCls + '">' + (row.eve === null ? '不考核' : row.eve.toFixed(4)) + '</td>'
+        + '<td class="num ' + row.attCls + '">' + row.att.toFixed(4) + '</td>'
+        + '<td class="num">' + row.attN.toFixed(1) + '</td>'
+        + '<td class="num">' + rate.toFixed(2) + '%</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table>';
+    el.innerHTML = html;
+  }
+
+  /* ================= 实时8小时风险预估（实况总览专属） ================= */
+  /* 列：站点名称/有单人数/不足8小时风险人数/8小时风险占比；
+     有单人数与精排预估卡同源（todayPlanRows），保证两卡一致；
+     风险占比<4% 正常、4%~8% 关注、>8% 预警（对应 8小时占比 96%/92% 阈值，语义色） */
+  function liveRiskRows(){
+    /* 真实数据源优先：data/risk8h.js（维度联动：仅取当前维度站点） */
+    if(window.RISK8H_DATA && RISK8H_DATA.sites && RISK8H_DATA.sites.length){
+      var siteMap = {};
+      RISK8H_DATA.sites.forEach(function(s){ siteMap[s.site] = s; });
+      return liveSites().map(function(s){
+        var d = siteMap[s] || { order: 0, riskN: 0, riskPct: 0 };
+        var cls = (d.riskPct < 4) ? 'risk-ok' : ((d.riskPct < 8) ? 'risk-warn' : 'risk-danger');
+        return { site: s, order: d.order, riskN: d.riskN, riskPct: d.riskPct, cls: cls, live: true };
+      });
+    }
+    var planMap = {};
+    todayPlanRows().forEach(function(p){ planMap[p.site] = p.order; });
+    return liveSites().map(function(s){
+      var order = planMap[s] || 0;   /* s 为站点名字符串，直接按键取值（与精排卡同源一致） */
+      var r = rng(seedFrom('lr#' + s));
+      var ratio = 0.90 + r() * 0.09;                    /* 8小时占比 90%~99% */
+      var riskN = Math.round(order * (1 - ratio));      /* 不足8小时风险人数 */
+      var riskPct = order > 0 ? (riskN / order * 100) : 0;
+      var cls = (riskPct < 4) ? 'risk-ok' : ((riskPct < 8) ? 'risk-warn' : 'risk-danger');
+      return { site: s, order: order, riskN: riskN, riskPct: riskPct, cls: cls };
+    });
+  }
+  function renderLiveRisk(){
+    var el = document.getElementById('liveRiskBody');
+    if(!el) return;
+    var rows = liveRiskRows();
+    var html = '<table class="star-table"><thead><tr>'
+      + '<th>站点名称</th><th>有单人数</th><th>不足8小时风险人数</th><th>8小时风险占比</th>'
+      + '</tr></thead><tbody>';
+    rows.forEach(function(row){
+      html += '<tr><td class="site">' + siteLabel(row.site) + '</td>'
+        + '<td class="num">' + row.order.toLocaleString('en-US') + '</td>'
+        + '<td class="num">' + row.riskN.toLocaleString('en-US') + '</td>'
+        + '<td class="num ' + row.cls + '">' + row.riskPct.toFixed(2) + '%</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table>';
+    el.innerHTML = html;
+  }
+
+  /* ================= 风险骑手明细弹窗（实时8小时风险卡专属） ================= */
+  /* 列：站点名称/骑手姓名/当前有效时长/预估有效时长/夜宵判定/夜宵保底时长
+     每站 3~5 名风险骑手（当前有效时长<8h，与卡片“不足8小时风险人数”口径一致）；
+     夜宵骑手约30%，绿色文本标注，保底时长 4~8h；固定 24h 实况口径（种子不含周期） */
+  function riskRiderRows(){
+    /* 真实数据源优先：data/risk8h.js（字段映射：night 字符串→布尔，curEff/estEff→cur/est） */
+    if(window.RISK8H_DATA && RISK8H_DATA.rows && RISK8H_DATA.rows.length){
+      var sites = liveSites();
+      return RISK8H_DATA.rows.filter(function(r){ return sites.indexOf(r.site) >= 0; })
+        .map(function(r){
+          var isNight = (r.night === '夜宵骑手');
+          return { site: r.site, name: r.name, cur: r.curEff, est: r.estEff,
+            night: isNight, nightBase: isNight ? r.nightBase : 0, live: true };
+        });
+    }
+    var rows = [];
+    liveSites().forEach(function(s){
+      var r = rng(seedFrom('rr#' + s));
+      var n = 3 + Math.floor(r() * 3);
+      for(var i = 0; i < n; i++){
+        var name = genLowName('rrN#' + s + '#' + i);
+        var cur = 5 + r() * 3;                 /* 当前有效时长 5.0~8.0h */
+        var est = cur + r() * 5;               /* 预估有效时长 5~13h */
+        var night = (r() < 0.3);               /* 夜宵判定 ~30% */
+        var nightBase = night ? (4 + r() * 4) : 0;   /* 夜宵保底时长 4~8h */
+        rows.push({ site: s, name: name, cur: cur, est: est, night: night, nightBase: nightBase });
+      }
+    });
+    return rows;
+  }
+  function fitRiModal(){
+    var body = document.getElementById('riModalBody');
+    var tbl = body.querySelector('table');
+    var w = tbl ? tbl.offsetWidth : 640;
+    var panel = document.querySelector('#riModal .modal-panel');
+    panel.style.width = Math.min(Math.max(w + 44, 560), Math.round(window.innerWidth * 0.96)) + 'px';
+  }
+  function renderRiModal(){
+    var body = document.getElementById('riModalBody');
+    var sub = document.getElementById('riModalSub');
+    if(sub) sub.textContent = (state.city !== '总览' ? state.city + ' · ' : '') + (state.site || '');
+    var rows = riskRiderRows();
+    var html = '<table class="star-table"><thead><tr>'
+      + '<th>站点名称</th><th>骑手姓名</th><th>当前有效时长</th><th>预估有效时长</th><th>夜宵判定</th><th>夜宵保底时长</th>'
+      + '</tr></thead><tbody>';
+    rows.forEach(function(x){
+      html += '<tr><td class="site">' + siteLabel(x.site) + '</td>'
+        + '<td>' + x.name + '</td>'
+        + '<td class="num">' + x.cur.toFixed(1) + 'h</td>'
+        + '<td class="num">' + x.est.toFixed(1) + 'h</td>'
+        + '<td class="num' + (x.night ? ' night-green' : '') + '">' + (x.night ? '是' : '否') + '</td>'
+        + '<td class="num">' + (x.night ? x.nightBase.toFixed(1) + 'h' : '-') + '</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table>';
+    body.innerHTML = html;
+    fitRiModal();
+  }
+  function openRiModal(){
+    document.getElementById('riModal').style.display = 'flex';
+    renderRiModal();
+  }
+  function closeRiModal(){
+    document.getElementById('riModal').style.display = 'none';
+  }
+
+  /* ================= 违规明细弹窗（站点维度 / 骑手明细） ================= */
+  /* 站点维度列：站点名称 + 5类违规数量（与卡片同源、求和口径一致） */
+  var VIO_COLS = [
+    { label: '站点名称' },
+    { label: '虚假点送达容错', tol: true },
+    { label: '虚假点送达', key: '虚假点送达' },
+    { label: '虚假配送单（含自下单）', key: '虚假配送单（含自下）' },
+    { label: '违规引导修改地址', key: '违规引导更改地址' },
+    { label: '违规引导取消', key: '违规引导取消' },
+    { label: '虚假骑手', key: '虚假骑手' }
+  ];
+  /* 容错额度：固定配置值（种子不含周期），不随本月/本周/昨日变化 */
+  function vioTol(site){
+    var r = rng(seedFrom('vioTol#' + site));
+    return Math.round(2 + r() * 7);
+  }
+  function siteVioTableHtml(){
+    var sites = (state.city === '总览')
+      ? STAR['济南'].concat(STAR['淄博'])
+      : STAR[state.city];
+    if(state.site){
+      sites = sites.filter(function(r){ return r.site === (SITE_ALIAS[state.site] || state.site); });
+    }
+    var html = '<table class="star-table"><thead><tr>';
+    VIO_COLS.forEach(function(c){
+      html += c.tol ? '<th class="th-tol">' + c.label + '</th>' : '<th>' + c.label + '</th>';
+    });
+    html += '</tr></thead><tbody>';
+    /* 真实分支（违规列表 sheet：周期Σ，容错列保留配置值；17 站含临淄东，与利群不合并） */
+    if(window.VIO_DATA && VIO_DATA.sites){
+      var vSites = (state.city === '总览')
+        ? SITES['济南'].concat(SITES['淄博'])
+        : SITES[state.city];
+      if(state.site){
+        vSites = vSites.filter(function(n){ return n === state.site; });
+      }
+      var days = vioSpanDays();
+      vSites.forEach(function(s){
+        html += '<tr><td class="site">' + s + '</td>';
+        VIO_COLS.slice(1).forEach(function(c){
+          if(c.tol){
+            html += '<td class="num tol">' + vioTol(s) + '</td>';
+          } else {
+            var n = 0;
+            days.forEach(function(d){
+              var x = VIO_DATA.sites[s] && VIO_DATA.sites[s].daily[d] && VIO_DATA.sites[s].daily[d][c.key];
+              if(x) n += x.n;
+            });
+            html += '<td class="num">' + n + '</td>';
+          }
+        });
+        html += '</tr>';
+      });
+      return html + '</tbody></table>';
+    }
+    sites.forEach(function(s){
+      html += '<tr><td class="site">' + s.site + '</td>';
+      VIO_COLS.slice(1).forEach(function(c){
+        if(c.tol){
+          html += '<td class="num tol">' + vioTol(s.site) + '</td>';
+        } else {
+          var ki = Object.keys(V_BASE).indexOf(c.key);
+          html += '<td class="num">' + vioSiteNum(s.site, state.span, ki) + '</td>';
+        }
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    return html;
+  }
+  /* 骑手明细：每站按周期生成若干违规记录（日期/站点/骑手/违规类型） */
+  function riderVioRows(){
+    /* 真实分支（违规列表 sheet：罚单非空记录，日期/站点/骑手姓名/违规类型；17 站含临淄东，与利群不合并） */
+    if(window.VIO_DATA && VIO_DATA.sites){
+      var days = vioSpanDays();
+      var vSites = (state.city === '总览')
+        ? SITES['济南'].concat(SITES['淄博'])
+        : SITES[state.city];
+      if(state.site){
+        vSites = vSites.filter(function(n){ return n === state.site; });
+      }
+      var rows = [];
+      vSites.forEach(function(s){
+        days.forEach(function(d){
+          (VIO_DATA.types || []).forEach(function(card){
+            var x = VIO_DATA.sites[s] && VIO_DATA.sites[s].daily[d] && VIO_DATA.sites[s].daily[d][card];
+            if(x && x.rows){
+              x.rows.forEach(function(r2){
+                rows.push({ d: d, site: s, name: r2.name || r2.rider, type: card, time: r2.time });
+              });
+            }
+          });
+        });
+      });
+      return rows;
+    }
+    var sites = (state.city === '总览')
+      ? STAR['济南'].concat(STAR['淄博'])
+      : STAR[state.city];
+    if(state.site){
+      sites = sites.filter(function(r){ return r.site === (SITE_ALIAS[state.site] || state.site); });
+    }
+    var days = (state.span === '本月') ? M_RANGE : (state.span === '本周' ? W_RANGE : [fmtD(yesterday)]);
+    var cnt = (state.span === '本月') ? 6 : (state.span === '本周' ? 3 : 2);
+    var V_NAMES = Object.keys(V_BASE);
+    var rows = [];
+    sites.forEach(function(s){
+      for(var j = 0; j < cnt; j++){
+        var r = rng(seedFrom('vioR#' + s.site + '#' + state.span + '#' + j));
+        if(r() < 0.25) continue;
+        var d = days[Math.floor(r() * days.length)];
+        var rn = rng(seedFrom('vioRN#' + s.site + '#' + state.span + '#' + j));
+        var name = '骑手' + String(Math.floor(rn() * 20) + 1).padStart(2, '0');
+        var rt = rng(seedFrom('vioRT#' + s.site + '#' + state.span + '#' + j));
+        var type = V_NAMES[Math.floor(rt() * V_NAMES.length)];
+        rows.push({ d: d, site: s.site, name: name, type: type });
+      }
+    });
+    return rows;
+  }
+  function riderVioTableHtml(){
+    var rows = riderVioRows();
+    if(!rows.length){
+      return '<div class="modal-empty">当前维度/周期下暂无违规记录</div>';
+    }
+    var html = '<table class="star-table"><thead><tr>'
+      + '<th>日期</th><th>站点名称</th><th>骑手姓名</th><th>违规类型</th>'
+      + '</tr></thead><tbody>';
+    rows.forEach(function(it){
+      html += '<tr><td class="num">' + (it.time || it.d) + '</td>'
+        + '<td class="site">' + it.site + '</td>'
+        + '<td>' + it.name + '</td>'
+        + '<td class="down">' + it.type + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    return html;
+  }
+  /* 弹窗宽度随表格内容自适应 */
+  function fitVioModal(){
+    var body = document.getElementById('vioModalBody');
+    var tbl = body.querySelector('table');
+    var w = tbl ? tbl.offsetWidth : 640;
+    var panel = document.querySelector('#vioModal .modal-panel');
+    if(panel){ panel.style.width = Math.min(Math.max(w + 44, 560), Math.round(window.innerWidth * 0.96)) + 'px'; }
+  }
+  function renderVioModal(tab){
+    var body = document.getElementById('vioModalBody');
+    document.getElementById('vioModalSub').textContent =
+      (state.city !== '总览' ? state.city + ' · ' : '') + (state.site || '') + ' · ' + state.span;
+    body.innerHTML = (tab === 'site') ? siteVioTableHtml() : riderVioTableHtml();
+    fitVioModal();
+  }
+  function openVioModal(){
+    /* 先显示再渲染测量：隐藏态下表格 offsetWidth 为 0，初始宽度以站点维度表为准 */
+    document.getElementById('vioModal').style.display = 'flex';
+    renderVioModal('site');
+  }
+  function closeVioModal(){
+    document.getElementById('vioModal').style.display = 'none';
+  }
+
+  /* ================= 留存两项达成指标（柱状图） ================= */
+  /* 全量留存率 / 次月留存率；固定口径不随周期变化（本月值），随组织维度联动 */
+  var RETAIN_BASE = { '全量留存率': 88.5, '次月留存率': 74.2 };
+  /* 留存两项真实聚合（2026-08-07 用户口径）：
+     全量留存率 = 在职÷(在职+离职)；次月留存率 = 上月入职中离职日期非空且司龄<31 ÷ 上月入职总行数；
+     按 state.city/site 聚合（V理工/集约已并入主站，临淄东独立） */
+  function retainRealData(){
+    if(!(window.RETAIN_DATA && RETAIN_DATA.sites)) return null;
+    var list = [];
+    Object.keys(RETAIN_DATA.sites).forEach(function(site){
+      var s = RETAIN_DATA.sites[site];
+      if(state.city !== '总览' && s.city !== state.city) return;
+      if(state.site && site !== state.site) return;
+      list.push(s);
+    });
+    if(!list.length) return null;
+    var zz = 0, lz = 0, sy = 0, lost = 0;
+    list.forEach(function(s){
+      zz += s.zz; lz += s.lz; sy += s.sy; lost += s.syLost;
+    });
+    var keep = (zz + lz) ? Math.round(zz / (zz + lz) * 10000) / 100 : 0;
+    var next = sy ? Math.round((1 - lost / sy) * 10000) / 100 : 0;   /* 次月留存率 = 1 − 流失率（2026-08-07 用户确认） */
+    return [
+      { name: '全量留存率', val: keep },
+      { name: '次月留存率', val: next }
+    ];
+  }
+  function retainData(){
+    var real = retainRealData();
+    if(real) return real;
+    var scale = getScale();
+    var orgKey = state.city + '#' + (state.site || '');
+    return Object.keys(RETAIN_BASE).map(function(k, i){
+      var r = rng(seedFrom('ret#' + orgKey + '#' + i));
+      var base = RETAIN_BASE[k] * (1 + (r() - 0.5) * 0.04) * (1 + (scale - 1) * 0.02);
+      return { name: k, val: Math.round(base * 100) / 100 };
+    });
+  }
+  function renderRetain(){
+    var el = document.getElementById('chart-retain');
+    if(!el) return;
+    if(!retainChart) retainChart = echarts.init(el);
+    var d = retainData();
+    /* 弧形双峰：曲线边（二次贝塞尔）、两柱内角于中部接触、外角扩散到图表区边缘、半透明渐变 */
+    var grad = new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+      { offset: 0, color: 'rgba(234,217,174,0.75)' }, { offset: 1, color: 'rgba(169,138,85,0.22)' }
+    ]);
+    retainChart.setOption({
+      tooltip: Object.assign({
+        trigger: 'axis',
+        formatter: function(ps){ return ps[0].value[0] + '：<b>' + ps[0].value[1].toFixed(2) + '%</b>'; }
+      }, TH.tooltip),
+      grid: { left: 16, right: 16, top: 34, bottom: 24 },
+      xAxis: {
+        type: 'category', data: d.map(function(x){ return x.name; }),
+        axisLabel: { color: TH.catLabel, fontSize: 11 },
+        axisLine: { lineStyle: { color: TH.axisLine } }, axisTick: { show: false }
+      },
+      yAxis: {
+        type: 'value', min: 30, max: 100,
+        axisLabel: { show: false },
+        axisLine: { show: false },
+        axisTick: { show: false },
+        splitLine: { show: false }
+      },
+      series: [{
+        type: 'custom',
+        renderItem: function(params, api){
+          var i = params.dataIndex;
+          var val = api.value(1);
+          var x = api.coord([api.value(0), val])[0];
+          var y = api.coord([api.value(0), val])[1];
+          var baseY = api.coord([api.value(0), 30])[1];
+          var gridW = api.getWidth();
+          var mid = gridW / 2;
+          var yMid = baseY + (y - baseY) * 0.5;
+          var dStr;
+          if(i === 0){
+            /* 外边缘：控制点偏顶点侧（0.65）→ 向内凹；内边缘：控制点偏顶点侧（0.35）→ 向内凹；凸包不超界 */
+            dStr = 'M 0 ' + baseY
+              + ' Q ' + (x * 0.65) + ' ' + yMid + ', ' + x + ' ' + y
+              + ' Q ' + (x + (mid - x) * 0.35) + ' ' + yMid + ', ' + mid + ' ' + baseY + ' Z';
+          } else {
+            dStr = 'M ' + mid + ' ' + baseY
+              + ' Q ' + (mid + (x - mid) * 0.65) + ' ' + yMid + ', ' + x + ' ' + y
+              + ' Q ' + (x + (gridW - x) * 0.35) + ' ' + yMid + ', ' + gridW + ' ' + baseY + ' Z';
+          }
+          return {
+            type: 'path',
+            shape: { pathData: dStr, x: 0, y: 0 },
+            style: api.style({
+              fill: grad,
+              text: val.toFixed(2) + '%',
+              textPosition: 'top',
+              textFill: '#E8D5AC',
+              textFont: '11px Microsoft YaHei, sans-serif'
+            })
+          };
+        },
+        data: d.map(function(x){ return [x.name, x.val]; })
+      }]
+    }, { notMerge: true });
+  }
+
+  /* ================= 权益项安全逐日趋势（折线图） ================= */
+  /* 戴盔系带 / 路口超速 双按钮切换；逐日固定本月数据，月度达成虚线随当前类型总达成浮动 */
+  var SAFETY_BASE = { helmet: 95.2, overspeed: 6.8 };
+  var SAFETY_NAME = { helmet: '戴盔系带', overspeed: '路口超速' };
+  function safetyData(type){
+    /* 真实分支（2026-08-07 接入 安全.xlsx：戴盔系带/路口超速，安全技能同口径） */
+    if(window.SAFETY_DATA && SAFETY_DATA[type]){
+      /* orgKey 与管线一致：站点级='站名#'、城市级='城市#'、总览='总览#'（勿拼 state.city+'#'+site，站点级会匹配不到回退种子） */
+      var orgKey = (state.site || state.city) + '#';
+      var d0 = SAFETY_DATA[type][orgKey];
+      if(d0){
+        var ym = SAFETY_DATA.ym;
+        return {
+          total: d0.total,
+          days: M_RANGE.map(function(d){
+            var v = d0.days[ym + d.slice(3)];   /* MM-DD → YYYYMMDD */
+            return { d: d, v: (v === undefined ? null : v) };
+          })
+        };
+      }
+    }
+    var scale = getScale();
+    var orgKey = state.city + '#' + (state.site || '') + '#' + type;
+    var total = SAFETY_BASE[type] * (1 + (rng(seedFrom('safT#' + orgKey))() - 0.5) * 0.03) * (1 + (scale - 1) * 0.02);
+    var days = M_RANGE.map(function(d, i){
+      var r = rng(seedFrom('safD#' + orgKey + '#' + i));
+      var spread = (type === 'helmet') ? 0.05 : 0.25;   /* 超速率波动幅度更大 */
+      return { d: d, v: Math.round(total * (1 + (r() - 0.5) * spread) * 100) / 100 };
+    });
+    return { total: Math.round(total * 100) / 100, days: days };
+  }
+  function renderSafety(){
+    var el = document.getElementById('chart-safety');
+    if(!el) return;
+    var type = state.safetyType;
+    document.getElementById('btnHelmet').classList.toggle('active', type === 'helmet');
+    document.getElementById('btnOverspeed').classList.toggle('active', type === 'overspeed');
+    var d = safetyData(type);
+    var n = d.days.length;
+    if(!safetyChart) safetyChart = echarts.init(el);
+    safetyChart.setOption({
+      tooltip: Object.assign({
+        trigger: 'axis',
+        axisPointer: { type: 'line', snap: true },
+        formatter: function(ps){
+          var p = ps[0];
+          return d.days[Math.round(p.value[0])].d + '<br/>' + SAFETY_NAME[type] + '：<b>' + Number(p.value[1]).toFixed(2) + '%</b>';
+        }
+      }, TH.tooltip),
+      grid: { left: 16, right: 24, top: 26, bottom: 26 },
+      xAxis: {
+        type: 'value', min: 0, max: n - 1, interval: 1,
+        axisLine: { lineStyle: { color: TH.axisLine } },
+        axisTick: { show: false },
+        axisLabel: {
+          color: '#C9B98C', fontSize: 11,
+          formatter: function(val){ return d.days[Math.round(val)] ? d.days[Math.round(val)].d : ''; }
+        },
+        splitLine: { show: false }
+      },
+      yAxis: {
+        type: 'value', min: (type === 'helmet') ? 80 : 0, max: (type === 'helmet') ? 100 : 10,
+        axisLabel: { show: false },
+        axisLine: { show: false },
+        axisTick: { show: false },
+        splitLine: { show: false }
+      },
+      series: [{
+        type: 'line', smooth: false,
+        data: d.days.map(function(x, i){ return [i, x.v]; }),
+        symbol: 'none',
+        lineStyle: {
+          width: 3,
+          color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+            { offset: 0, color: '#E3CEA4' }, { offset: 1, color: '#8A6B3F' }
+          ])
+        },
+        markLine: {
+          silent: true, symbol: 'none',
+          data: [{ yAxis: d.total }],
+          lineStyle: { color: '#C96F4A', type: 'dashed', width: 1.5 },
+          label: {
+            show: true, position: 'insideEndTop',
+            formatter: '月度达成：' + d.total.toFixed(2) + '%',
+            color: '#C96F4A', fontSize: 11
+          }
+        }
+      }]
+    }, { notMerge: true });
+
+    /* 竖线与 8小时占比同款机制：仅光标贴近日期点位时显示，迟滞防抖 16px 内显示、32px 外隐藏 */
+    if(!safetyChart._safetyHooked){
+      safetyChart._safetyHooked = true;
+      var zr = safetyChart.getZr();
+      var tipOn = false;
+      zr.on('mousemove', function(e){
+        try{
+          var px = e.offsetX, py = e.offsetY;
+          var pos = safetyChart.convertFromPixel({ xAxisIndex: 0 }, [px, py]);
+          if(!pos){
+            if(tipOn){ tipOn = false; safetyChart.dispatchAction({ type: 'hideTip' }); }
+            return;
+          }
+          var xVal = pos[0], idx = Math.round(xVal);
+          var gridW = safetyChart.getWidth() - 16 - 24;   /* grid left/right */
+          var pxPerDay = (n - 1) > 0 ? gridW / (n - 1) : 1;
+          var distPx = Math.abs(xVal - idx) * pxPerDay;
+          var inRange = (idx >= 0 && idx < n);
+          if(!tipOn && inRange && distPx <= 16){
+            tipOn = true;
+            safetyChart.dispatchAction({ type: 'showTip', x: px, y: py });
+          } else if(tipOn && (!inRange || distPx >= 32)){
+            tipOn = false;
+            safetyChart.dispatchAction({ type: 'hideTip' });
+          }
+        }catch(err){}
+      });
+      zr.on('mouseout', function(){
+        if(tipOn){ tipOn = false; try{ safetyChart.dispatchAction({ type: 'hideTip' }); }catch(err){} }
+      });
+    }
+  }
+
+  /* ================= 渲染（主图表已移除：事业部对比 / 热销 Top5 / 目标进度） ================= */
+  function renderAll(){
+    renderStarTable();
+    renderKpis();  /* renderKpis 内部已渲染迷你趋势 */
+    renderPies();
+    renderPayTable();
+    renderRatioTrend();
+    renderExpChart();
+    renderViolation();
+    renderRetain();
+    renderSafety();
+    renderTodayPlan();
+    renderLiveRisk();
+    /* 实况专属新卡：仅实况视图渲染（复盘视图隐藏，避免隐藏态图表宽度为 0） */
+    var isLive = (state.view === '实况总览');
+    /* 先控制容器显隐，再渲染图表（display:none 容器上 echarts.init 宽 0 → 整图不可见） */
+    ['card-today-plan','card-live-risk','card-attr-plan','card-low-eff'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el){ el.style.display = isLive ? '' : 'none'; }
+    });
+    if(isLive){ renderAttrPlan(); renderLowEff(); }
+    /* 实况总览不展示星级看板、人员结构饼图与薪动力区域（含趋势图/预留位） */
+    var hide = isLive;
+    ['starCard','card-channel','card-tenure','card-cycle','card-pay','card-ratio','card-reserve','card-violation','card-retain','card-safety'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el){ el.style.display = hide ? 'none' : ''; }
+    });
+  }
+
+  /* ================= 明日分时段出勤率（来源线上排班，实况总览专属） ================= */
+  /* X轴：早餐/午高峰/下午茶1/下午茶2/晚高峰/夜宵；出勤率 62~95%；固定实况口径随维度联动 */
+  var ATTR_PERIODS = ['早餐','午高峰','下午茶1','下午茶2','晚高峰','夜宵'];
+  var attrChart = null;
+  function attrPlanData(){
+    /* 真实数据源优先：data/attr.js（按维度聚合 Σ(时段人次)/Σ(基数)） */
+    if(window.ATTR_DATA && ATTR_DATA.bySite){
+      var sites = liveSites();
+      var tot = {}, base = 0;
+      ATTR_DATA.periods.forEach(function(p){ tot[p] = 0; });
+      sites.forEach(function(s){
+        var d = ATTR_DATA.bySite[s];
+        if(!d) return;
+        base += d.base;
+        ATTR_DATA.periods.forEach(function(p){ tot[p] += d[p] * d.base; });
+      });
+      return ATTR_DATA.periods.map(function(p){
+        return { name: p, val: (base > 0 ? Math.round(tot[p] / base * 10) / 10 : 0) };
+      });
+    }
+    var orgKey = state.city + '#' + (state.site || '');
+    return ATTR_PERIODS.map(function(p){
+      /* 种子尾用时段名（数字尾会导致 LCG 首输出相近，时段间几乎同值） */
+      var r = rng(seedFrom('attr#' + orgKey + '#' + p));
+      return { name: p, val: Math.round((62 + r() * 33) * 10) / 10 };
+    });
+  }
+  function renderAttrPlan(){
+    var el = document.getElementById('chart-attr-plan');
+    if(!el) return;
+    if(!attrChart) attrChart = echarts.init(el);
+    var data = attrPlanData();
+    attrChart.setOption({
+      grid:{ left:36, right:10, top:34, bottom:24 },
+      tooltip:{ trigger:'axis', axisPointer:{ type:'shadow' }, backgroundColor:'rgba(32,24,12,.92)', borderColor:'rgba(201,169,106,.4)', textStyle:{ color:'#E8DCC0', fontSize:12 },
+        formatter: function(ps){ var p = ps[0]; return p.name + '<br/>出勤率：<b>' + p.value.toFixed(1) + '%</b>'; } },
+      xAxis:{ type:'category', data: data.map(function(d){ return d.name; }),
+        axisLine:{ show:false }, axisTick:{ show:false }, splitLine:{ show:false }, axisLabel:{ color:'#C9B98C', fontSize:11 } },
+      yAxis:{ type:'value', min:0, max:100, show:true,
+        axisLine:{ show:false }, axisTick:{ show:false }, splitLine:{ show:false },
+        axisLabel:{ color:'#C9B98C', fontSize:10.5, formatter:'{value}%' } },
+      series:[{
+        type:'bar', data: data.map(function(d){ return d.val; }), barWidth:'34%',
+        /* 柱体：底部深琥珀金 → 顶部浅金（翻转渐变） */
+        itemStyle:{ borderRadius:[6,6,0,0], color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#C9963E'},{offset:1,color:'#F2DFB0'}]) },
+        label:{ show:true, position:'top', color:'#C9B98C', fontSize:10.5, formatter:function(p){ return p.value.toFixed(1) + '%'; } }
+      }]
+    }, true);
+    attrChart.resize();
+  }
+
+  /* ================= 实时低效人数（号码牌，实况总览专属） ================= */
+  /* 大号亮金色数字（加框）；与明细弹窗同源（低效骑手行数求和）；固定实况口径随维度联动 */
+  /* 明细列：站点名称/骑手姓名/总单量/双峰单量/双峰占比/改派剔除后单量/有效时长 */
+  function lowEffRows(){
+    var sites = liveSites();
+    /* 真实数据源优先：data/loweff.js（维度联动：仅取当前维度站点） */
+    if(window.LOWEFF_DATA && LOWEFF_DATA.rows && LOWEFF_DATA.rows.length){
+      var liveRows = LOWEFF_DATA.rows.filter(function(r){ return sites.indexOf(r.site) >= 0; });
+      return { rows: liveRows, total: liveRows.length, live: true };
+    }
+    /* 种子回退（数据文件缺失/未生成时） */
+    var orgKey = state.city + '#' + (state.site || '');
+    var total = 0;
+    var rows = [];
+    sites.forEach(function(s){
+      var r = rng(seedFrom('le#' + orgKey + '#' + s));
+      var n = 1 + Math.floor(r() * 4);   /* 每站 1~4 名低效骑手 */
+      total += n;
+      for(var i = 0; i < n; i++){
+        var seed = 'leN#' + orgKey + '#' + s + '#' + i;
+        var rn = rng(seedFrom(seed));
+        var totalOrder = 8 + Math.floor(rn() * 30);                          /* 总单量 8~37 */
+        var peak = Math.round(totalOrder * (0.45 + rn() * 0.25));            /* 双峰单量（占比45~70%） */
+        var afterRej = totalOrder - Math.floor(rn() * 4);                    /* 改派剔除后单量（剔除0~3） */
+        var eff = 1 + rn() * 3;                                              /* 有效时长 1~4h（低效） */
+        rows.push({ site: s, name: genLowName(seed), total: totalOrder, peak: peak,
+          peakPct: peak / totalOrder, afterRej: afterRej, eff: eff });
+      }
+    });
+    return { rows: rows, total: total };
+  }
+  function renderLowEff(){
+    var el = document.getElementById('lowEffBody');
+    if(!el) return;
+    var total = lowEffRows().total;
+    el.innerHTML = '<div class="low-eff-box"><div class="low-eff-num">' + total.toLocaleString('en-US') + '</div></div>';
+    /* 明细按钮宽度与数字框一致 */
+    var box = el.querySelector('.low-eff-box');
+    var btn = document.getElementById('btnLowEff');
+    if(box && btn && box.offsetWidth){ btn.style.width = box.offsetWidth + 'px'; }
+  }
+  function renderLowEffModal(){
+    var body = document.getElementById('lowEffModalBody');
+    if(!body) return;
+    var sub = document.getElementById('lowEffModalSub');
+    if(sub) sub.textContent = (state.city !== '总览' ? state.city + ' · ' : '') + (state.site || '');
+    var data = lowEffRows();
+    var html = '<table class="star-table"><thead><tr>'
+      + '<th>站点名称</th><th>骑手姓名</th><th>总单量</th><th>双峰单量</th><th>双峰占比</th><th>改派剔除后单量</th><th>有效时长</th>'
+      + '</tr></thead><tbody>';
+    data.rows.forEach(function(x){
+      html += '<tr><td class="site">' + siteLabel(x.site) + '</td>'
+        + '<td>' + x.name + '</td>'
+        + '<td class="num">' + x.total + '</td>'
+        + '<td class="num">' + x.peak + '</td>'
+        + '<td class="num">' + (x.peakPct * 100).toFixed(1) + '%</td>'
+        + '<td class="num">' + x.afterRej + '</td>'
+        + '<td class="num">' + x.eff.toFixed(1) + 'h</td></tr>';
+    });
+    html += '</tbody></table><div class="low-eff-total">合计低效 ' + data.total + ' 人</div>';
+    body.innerHTML = html;
+    var tbl = body.querySelector('table');
+    var panel = document.querySelector('#lowEffModal .modal-panel');
+    var w = tbl ? tbl.offsetWidth : 560;
+    panel.style.width = Math.min(Math.max(w + 44, 560), Math.round(window.innerWidth * 0.96)) + 'px';
+  }
+  function openLowEffModal(){
+    document.getElementById('lowEffModal').style.display = 'flex';
+    renderLowEffModal();
+  }
+  function closeLowEffModal(){
+    document.getElementById('lowEffModal').style.display = 'none';
+  }
+
+  /* ================= KPI 明细弹窗（入职/离职预估，实况总览专属） ================= */
+  /* 列：站点名称/骑手ID/骑手姓名；入职每站 1~3 人、离职每站 1~2 人 */
+  function kpiDetailRows(kind){
+    /* 真实数据源优先：KPI_DATA.detail（入职/离职明细，维度联动） */
+    if(window.KPI_DATA && KPI_DATA.detail && KPI_DATA.detail[kind]){
+      var arr = KPI_DATA.detail[kind] || [];
+      var set = {};
+      liveSites().forEach(function(s){ set[s] = 1; });
+      return arr.filter(function(x){ return set[x.site]; });
+    }
+    var sites = liveSites();
+    var orgKey = state.city + '#' + (state.site || '');
+    var rows = [];
+    sites.forEach(function(s){
+      var r = rng(seedFrom(kind + '#' + orgKey + '#' + s));
+      var n = (kind === 'hire') ? 1 + Math.floor(r() * 3) : 1 + Math.floor(r() * 2);
+      for(var i = 0; i < n; i++){
+        var rs = kind + 'N#' + orgKey + '#' + s + '#' + i;
+        var rr = rng(seedFrom(rs));
+        rows.push({ site: s, id: 'R' + (1000 + Math.floor(rr() * 9000)), name: genLowName(rs) });
+      }
+    });
+    return rows;
+  }
+  function openKpiModal(kind){
+    document.getElementById('kpiModalTitle').textContent = (kind === 'hire' ? '入职明细' : '离职预估明细')
+      + ' · ' + (state.city !== '总览' ? state.city + ' · ' : '') + (state.site || '');
+    var rows = kpiDetailRows(kind);
+    var html = '<table class="star-table"><thead><tr>'
+      + '<th>站点名称</th><th>骑手ID</th><th>骑手姓名</th>'
+      + '</tr></thead><tbody>';
+    rows.forEach(function(x){
+      html += '<tr><td class="site">' + siteLabel(x.site) + '</td>'
+        + '<td class="num">' + x.id + '</td>'
+        + '<td>' + x.name + '</td></tr>';
+    });
+    html += '</tbody></table><div class="low-eff-total">共 ' + rows.length + ' 人</div>';
+    document.getElementById('kpiModalBody').innerHTML = html;
+    document.getElementById('kpiModal').style.display = 'flex';
+    fitKpiModal();
+  }
+  function fitKpiModal(){
+    var body = document.getElementById('kpiModalBody');
+    var tbl = body.querySelector('table');
+    var panel = document.querySelector('#kpiModal .modal-panel');
+    var w = tbl ? tbl.offsetWidth : 560;
+    panel.style.width = Math.min(Math.max(w + 44, 560), Math.round(window.innerWidth * 0.96)) + 'px';
+  }
+  function closeKpiModal(){
+    document.getElementById('kpiModal').style.display = 'none';
+  }
+
+  /* ================= 精排预估明细弹窗（实况总览专属） ================= */
+  /* 默认视图：与精排卡片同源（todayPlanRows）全列 + 合计；可切换：合格出勤不达标人员/班次未达成明细 */
+  var planDetailSel = 'missAtt';   /* 初始=合格出勤不达标人员；null=站点明细；missShift=班次未达成明细 */
+  /* 未达成班次选取（种子稳定、去重） */
+  function pickShifts(seedBase, maxN){
+    var shifts = [], tries = 0;
+    while(shifts.length < maxN && tries < 20){
+      var r = rng(seedFrom(seedBase + '#s' + tries));
+      var p = ATTR_PERIODS[Math.floor(r() * ATTR_PERIODS.length)];
+      if(shifts.indexOf(p) < 0){ shifts.push(p); }
+      tries++;
+    }
+    return shifts;
+  }
+  /* 合格出勤不达标人员：站点/姓名/预估可达成班次分/未达成班次名称/预估合格出勤分 */
+  function planDetailMissAtt(){
+    /* 真实数据源优先：PLAN_DATA.detail（天气 + 维度联动） */
+    if(window.PLAN_DATA && PLAN_DATA.detail){
+      var w = (state.weather === 'bad') ? '恶劣' : '正常';
+      var arr = PLAN_DATA.detail[w].missAtt;
+      if(!Array.isArray(arr)) arr = [];   /* 管线无数据时输出 0（数字），需容错 */
+      var set = {};
+      liveSites().forEach(function(s){ set[s] = 1; });
+      return arr.filter(function(x){ return set[x.site]; });
+    }
+    var sites = liveSites();
+    var orgKey = state.city + '#' + (state.site || '');
+    var rows = [];
+    sites.forEach(function(s){
+      var r = rng(seedFrom('pdA#' + orgKey + '#' + s));
+      var n = 1 + Math.floor(r() * 3);   /* 每站 1~3 人 */
+      for(var i = 0; i < n; i++){
+        var rs = 'pdAN#' + orgKey + '#' + s + '#' + i;
+        var rr = rng(seedFrom(rs));
+        rows.push({
+          site: s, name: genLowName(rs),
+          shiftScore: Math.round((0.5 + rr() * 0.45) * 10000) / 10000,   /* 预估可达成班次分 0.50~0.95 */
+          shifts: pickShifts(rs, 1 + Math.floor(rr() * 2)),              /* 未达成 1~2 班次 */
+          attScore: Math.round((0.5 + rr() * 0.45) * 10000) / 10000      /* 预估合格出勤分 0.50~0.95 */
+        });
+      }
+    });
+    return rows;
+  }
+  /* 班次未达成明细：站点/姓名/未达成班次名称 */
+  function planDetailMissShift(){
+    /* 真实数据源优先：PLAN_DATA.detail（天气 + 维度联动） */
+    if(window.PLAN_DATA && PLAN_DATA.detail){
+      var w = (state.weather === 'bad') ? '恶劣' : '正常';
+      var arr = PLAN_DATA.detail[w].missShift;
+      if(!Array.isArray(arr)) arr = [];   /* 管线无数据时输出 0（数字），需容错 */
+      var set = {};
+      liveSites().forEach(function(s){ set[s] = 1; });
+      return arr.filter(function(x){ return set[x.site]; });
+    }
+    var sites = liveSites();
+    var orgKey = state.city + '#' + (state.site || '');
+    var rows = [];
+    sites.forEach(function(s){
+      var r = rng(seedFrom('pdB#' + orgKey + '#' + s));
+      var n = 2 + Math.floor(r() * 3);   /* 每站 2~4 人 */
+      for(var i = 0; i < n; i++){
+        var rs = 'pdBN#' + orgKey + '#' + s + '#' + i;
+        var rr = rng(seedFrom(rs));
+        rows.push({ site: s, name: genLowName(rs), shifts: pickShifts(rs, 1 + Math.floor(rr() * 3)) });
+      }
+    });
+    return rows;
+  }
+  /* 未达成班次名称列宽 = 站点名称列宽 × 1.5（JS 实测） */
+  function fitShiftCol(body, idx){
+    var tbl = body.querySelector('table');
+    if(!tbl) return;
+    var ths = tbl.querySelectorAll('th');
+    if(ths.length <= idx) return;
+    var siteW = ths[0].offsetWidth || 120;
+    ths[idx].style.width = Math.round(siteW * 1.5) + 'px';
+  }
+  function openPlanDetail(){
+    var isBad = (state.weather === 'bad');
+    var dim = (state.city !== '总览' ? state.city + ' · ' : '') + (state.site || '');
+    var body = document.getElementById('planDetailBody');
+    var title = document.getElementById('planDetailTitle');
+    var bar = document.getElementById('planDetailBar');
+    if(bar){
+      bar.querySelectorAll('button').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-pd') === planDetailSel); });
+    }
+    var html = '';
+    if(planDetailSel === 'missAtt'){
+      title.textContent = '合格出勤不达标人员 · ' + (isBad ? '恶劣天气' : '正常场景') + ' · ' + dim;
+      var rows = planDetailMissAtt();
+      html = '<table class="star-table"><thead><tr>'
+        + '<th>站点名称</th><th>骑手姓名</th><th>预估可达成班次分</th><th>未达成班次名称</th><th>预估合格出勤分</th>'
+        + '</tr></thead><tbody>';
+      rows.forEach(function(x){
+        html += '<tr><td class="site">' + siteLabel(x.site) + '</td>'
+          + '<td>' + x.name + '</td>'
+          + '<td class="num">' + x.shiftScore.toFixed(4) + '</td>'
+          + '<td>' + x.shifts.join('、') + '</td>'
+          + '<td class="num">' + x.attScore.toFixed(4) + '</td></tr>';
+      });
+      html += '</tbody></table><div class="low-eff-total">共 ' + rows.length + ' 人</div>';
+      body.innerHTML = html;
+      fitShiftCol(body, 3);
+    } else if(planDetailSel === 'missShift'){
+      title.textContent = '班次未达成明细 · ' + (isBad ? '恶劣天气' : '正常场景') + ' · ' + dim;
+      var rows2 = planDetailMissShift();
+      html = '<table class="star-table"><thead><tr>'
+        + '<th>站点名称</th><th>骑手姓名</th><th>未达成班次名称</th>'
+        + '</tr></thead><tbody>';
+      rows2.forEach(function(x){
+        html += '<tr><td class="site">' + siteLabel(x.site) + '</td>'
+          + '<td>' + x.name + '</td>'
+          + '<td>' + x.shifts.join('、') + '</td></tr>';
+      });
+      html += '</tbody></table><div class="low-eff-total">共 ' + rows2.length + ' 人</div>';
+      body.innerHTML = html;
+      fitShiftCol(body, 2);
+    } else {
+      title.textContent = '精排预估明细 · ' + (isBad ? '恶劣天气' : '正常场景') + ' · ' + dim;
+      var rows3 = todayPlanRows();
+      var cols = TODAY_PLAN_COLS.slice();
+      cols[9] = isBad ? '注册合格率' : '有单合格率';
+      html = '<table class="star-table"><thead><tr>';
+      cols.forEach(function(c){ html += '<th>' + c + '</th>'; });
+      html += '</tr></thead><tbody>';
+      var tStaff = 0, tOrder = 0, tAtt = 0;
+      rows3.forEach(function(row){
+        var rate = isBad ? row.regRate : row.rate;
+        tStaff += row.staff; tOrder += row.order; tAtt += row.attN;
+        html += '<tr><td class="site">' + siteLabel(row.site) + '</td>'
+          + '<td class="num">' + row.score.toFixed(4) + '</td>'
+          + '<td class="num">' + row.staff.toLocaleString('en-US') + '</td>'
+          + '<td class="num">' + row.order.toLocaleString('en-US') + '</td>'
+          + '<td class="num ' + row.schedCls + '">' + row.sched.toFixed(4) + '</td>'
+          + '<td class="num ' + row.noonCls + '">' + row.noon.toFixed(4) + '</td>'
+          + '<td class="num ' + row.eveCls + '">' + row.eve.toFixed(4) + '</td>'
+          + '<td class="num ' + row.attCls + '">' + row.att.toFixed(4) + '</td>'
+          + '<td class="num">' + row.attN.toFixed(1) + '</td>'
+          + '<td class="num">' + rate.toFixed(2) + '%</td>'
+          + '</tr>';
+      });
+      html += '<tr class="benefit-city-row"><td class="site">合计</td><td class="num"></td>'
+        + '<td class="num">' + tStaff.toLocaleString('en-US') + '</td>'
+        + '<td class="num">' + tOrder.toLocaleString('en-US') + '</td>'
+        + '<td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td>'
+        + '<td class="num">' + tAtt.toFixed(1) + '</td><td class="num"></td></tr>';
+      html += '</tbody></table>';
+      body.innerHTML = html;
+    }
+    document.getElementById('planDetailModal').style.display = 'flex';
+    fitPlanDetail();
+  }
+  function fitPlanDetail(){
+    var body = document.getElementById('planDetailBody');
+    var tbl = body.querySelector('table');
+    var panel = document.querySelector('#planDetailModal .modal-panel');
+    var w = tbl ? tbl.offsetWidth : 560;
+    panel.style.width = Math.min(Math.max(w + 44, 560), Math.round(window.innerWidth * 0.96)) + 'px';
+  }
+  function closePlanDetail(){
+    document.getElementById('planDetailModal').style.display = 'none';
+  }
+
+  /* ================= 渲染：薪动力达成 ================= */
+  /* 站长评级（2026-08-07 用户确认）：封顶达成率>103%→15；>102.5%且≤103%→13；其他→文本「分区强排」 */
+  function payRating(cRate){
+    if(cRate > 1.03) return 15;
+    if(cRate > 1.025) return 13;
+    return '分区强排';
+  }
+  /* 站长评级：按星级映射 5→优秀 / 4→良好 / 3→合格（中文评级） */
+  var RATING = { 5:'优秀', 4:'良好', 3:'合格' };
+  /* 薪动力达成（示例口径）：以星级看板站点为行；实际达成=原始达成-重复入离职-低效人数-纯新剔除；
+     门槛/封顶达成率=实际达成÷门槛/封顶；标1/高标准占比=对应人数÷实际达成；种子随机保证稳定 */
+  function buildPayRows(){
+    var rows = (state.city === '总览')
+      ? STAR['济南'].concat(STAR['淄博'])
+      : STAR[state.city];
+    if(state.site){
+      rows = rows.filter(function(r){ return r.site === (SITE_ALIAS[state.site] || state.site); });
+    }
+    return rows.map(function(r){
+      var rand = rng(seedFrom(r.site));
+      var threshold = 15 + Math.floor(rand()*8);
+      var cap = Math.round(threshold * (1.6 + rand()*0.3));
+      var raw = Math.round(threshold * (0.9 + rand()*1.5));
+      var dup = Math.floor(rand()*5);
+      var low = Math.floor(rand()*6);
+      var pure = Math.floor(rand()*4);
+      var net = Math.max(1, raw - dup - low - pure);
+      /* 标1/高标准：独立随机流，保证占比分布拉开 */
+      var randS = rng(seedFrom(r.site + '#pay'));
+      var s1 = Math.round(net * (0.05 + randS()*0.7));
+      var hi = Math.round(net * (0.1 + randS()*0.85));
+      return {
+        site: r.site, rating: RATING[r.star] || '合格',
+        equity: Math.round((rand()*60 - 20) * 100) / 100,  /* 种子权益得分（兜底展示） */
+        threshold: threshold, cap: cap, raw: raw, dup: dup, low: low, pure: pure,
+        net: net, tRate: net/threshold, cRate: net/cap,
+        s1: s1, s1r: s1/net, hi: hi, hir: hi/net
+      };
+    });
+  }
+  /* 薪动力标题：随维度联动；站点维度去掉「累计」 */
+  var PAY_TITLES = { '本月':'本月薪动力累计达成', '本周':'本周薪动力累计达成', '昨日':'昨日薪动力达成' };
+  /* 明细详情开关：站点维度以上、本月/本周可用（汇总⇄逐日） */
+  /* （v13.34 起明细详情改为弹窗，不再切换表格） */
+  /* 低效名单素材（示例口径） */
+  var LOW_SUR = '王李张刘陈杨黄赵周吴徐孙马朱胡郭何高林罗郑梁谢宋唐许韩冯邓曹彭曾'.split('');
+  var LOW_GIV = ['伟','芳','娜','敏','静','磊','军','洋','勇','艳','杰','涛','明','超','秀','兰','霞','平','刚','英','强','华','鑫','宇','晨','昊','雪','婷','悦','浩'];
+  var LOW_REASONS = ['超时未妥投','差评超标','异常签收频发','投诉超标','虚假妥投','订单取消率过高'];
+  function genLowName(seedStr){
+    var rand = rng(seedFrom(seedStr));
+    var s = LOW_SUR[Math.floor(rand()*LOW_SUR.length)];
+    var g = LOW_GIV[Math.floor(rand()*LOW_GIV.length)];
+    return s + g + (rand() > 0.5 ? LOW_GIV[Math.floor(rand()*LOW_GIV.length)] : '');
+  }
+  /* 薪动力逐日明细（示例口径）：站点维度下按维度展示——本月=本月每日、本周=本周每日（周一~昨日）、昨日=昨日单日；
+     首列显示日期；门槛值/封顶值取该站点月口径；逐日种子随机保证稳定 */
+  function buildPayDaily(site){
+    var now = new Date();
+    var y = new Date(now.getFullYear(), now.getMonth(), now.getDate()-1);
+    var start, end;
+    if(state.span === '本月'){
+      start = new Date(now.getFullYear(), now.getMonth(), 1);
+      end = y;
+    } else if(state.span === '本周'){
+      start = new Date(now.getFullYear(), now.getMonth(), now.getDate()-((now.getDay()+6)%7));
+      end = y;
+    } else {
+      start = new Date(y);
+      end = y;
+    }
+    var days = [];
+    for(var d = new Date(start); d <= end; d.setDate(d.getDate()+1)){
+      var p2 = function(n){ return (n<10?'0':'')+n; };
+      days.push({ d: d, key: d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate()) });
+    }
+    /* 站点月汇总：取门槛值/封顶值/评级口径 */
+    var src = (state.city === '总览') ? STAR['济南'].concat(STAR['淄博']) : STAR[state.city];
+    src = src.filter(function(r){ return r.site === site; });
+    var srow = src[0] || null;
+    var threshold = 15, cap = 26, rating = '合格';
+    if(srow){
+      rating = RATING[srow.star] || '合格';
+      var rand0 = rng(seedFrom(srow.site));
+      threshold = 15 + Math.floor(rand0()*8);
+      cap = Math.round(threshold * (1.6 + rand0()*0.3));
+    }
+    return days.map(function(day){
+      var rand = rng(seedFrom(site + '#' + day.key));
+      var raw = 1 + Math.floor(rand()*5);
+      var dup = Math.floor(rand()*3);
+      var low = Math.floor(rand()*3);
+      var pure = Math.floor(rand()*2);
+      var net = Math.max(0, raw - dup - low - pure);
+      var s1 = net ? Math.round(net*(0.05+rand()*0.7)) : 0;
+      var hi = net ? Math.round(net*(0.1+rand()*0.85)) : 0;
+      /* 权益得分：逐日种子值（独立随机流，10~100，2位小数） */
+      var randE = rng(seedFrom(site + '#' + day.key + '#eq'));
+      var equity = Math.round((10 + randE()*90)*100)/100;
+      return {
+        site: site, date: day.key, rating: rating, equity: equity, threshold: threshold, cap: cap,
+        raw: raw, dup: dup, low: low, pure: pure, net: net,
+        tRate: net/threshold, cRate: net/cap,
+        s1: s1, s1r: net ? s1/net : 0, hi: hi, hir: net ? hi/net : 0
+      };
+    });
+  }
+  /* 明细详情：上下文内所有站点的逐日明细（本月/本周）；PAY_DATA 优先，缺失回退种子 */
+  function buildPayDetailAll(){
+    var sites = (state.city === '总览') ? STAR['济南'].concat(STAR['淄博']) : STAR[state.city];
+    var out = [];
+    sites.forEach(function(r){
+      if(window.PAY_DATA && PAY_DATA.days){ out = out.concat(buildPayDailyReal(r.site)); }
+      else { out = out.concat(buildPayDaily(r.site)); }
+    });
+    return out;
+  }
+  /* ================= 薪动力达成：PAY_DATA 真实分支（2026-08-07 接入 review.py 数据） ================= */
+  function pad2(n){ return (n<10?'0':'')+n; }
+  /* 按周期过滤 PAY_DATA.days 日期（昨日=最新一天 / 本周=周一~最新 / 本月=当月1日~最新） */
+  function payDates(span){
+    var keys = Object.keys(PAY_DATA.days).sort();
+    if(!keys.length) return [];
+    var last = PAY_DATA.dataDate;
+    if(span === '昨日') return [last];
+    var start;
+    if(span === '本周'){
+      var y = +last.slice(0,4), m = +last.slice(4,6), d = +last.slice(6,8);
+      var dow = new Date(y, m-1, d).getDay();
+      var mon = new Date(y, m-1, d - ((dow+6)%7));
+      start = mon.getFullYear() + pad2(mon.getMonth()+1) + pad2(mon.getDate());
+    } else {
+      start = last.slice(0,6) + '01';
+    }
+    return keys.filter(function(k){ return k >= start && k <= last; });
+  }
+  function payRowReal(site, date){
+    var p = PAY_DATA.days[date] && PAY_DATA.days[date][site];
+    if(!p) return null;
+    return {
+      site: site, date: date, rating: PAY_DATA.rating[site] || '合格',
+      equity: p.equity, threshold: p.threshold, cap: p.cap,
+      raw: p.raw, dup: p.dup, low: p.low, pure: p.pure, net: p.net,
+      tRate: p.tRate, cRate: p.cRate, s1: p.s1, s1r: p.s1r, hi: p.hi, hir: p.hir
+    };
+  }
+  /* 站点维度：逐日明细（日期升序） */
+  function buildPayDailyReal(site){
+    var out = [];
+    payDates(state.span).forEach(function(d){
+      var r = payRowReal(site, d);
+      if(r) out.push(r);
+    });
+    return out;
+  }
+  /* 汇总维度：周期内每日累加（门槛/封顶同样累加，达成率=Σ实际÷Σ目标） */
+  function buildPayRowsReal(){
+    var dates = payDates(state.span);
+    var order = (state.city === '总览') ? STAR['济南'].concat(STAR['淄博']) : (STAR[state.city] || []);
+    var out = [];
+    order.forEach(function(sr){
+      var site = sr.site, acc = {raw:0,dup:0,low:0,pure:0,net:0,s1:0,hi:0,threshold:0,cap:0,equity:0}, seen = false;
+      dates.forEach(function(d){
+        var p = PAY_DATA.days[d] && PAY_DATA.days[d][site];
+        if(!p) return;
+        seen = true;
+        acc.raw += p.raw; acc.dup += p.dup; acc.low += p.low; acc.pure += p.pure;
+        acc.net += p.net; acc.s1 += p.s1; acc.hi += p.hi;
+        acc.threshold += p.threshold; acc.cap += p.cap;
+        if(p.equity != null) acc.equity += p.equity;
+      });
+      if(!seen) return;
+      out.push({
+        site: site, rating: PAY_DATA.rating[site] || '合格',
+        equity: dates.length === 1 ? acc.equity : null,  /* 昨日周期：单日权益得分；多日累计不展示 */
+        threshold: acc.threshold, cap: acc.cap,
+        raw: acc.raw, dup: acc.dup, low: acc.low, pure: acc.pure, net: acc.net,
+        tRate: acc.threshold>0 ? acc.net/acc.threshold : 0,
+        cRate: acc.cap>0 ? acc.net/acc.cap : 0,
+        s1: acc.s1, s1r: acc.net>0 ? (acc.s1-acc.low)/acc.net : 0,
+        hi: acc.hi, hir: acc.net>0 ? acc.hi/acc.net : 0
+      });
+    });
+    return out;
+  }
+  /* 当前表格上下文行（站点→逐日，其余→汇总）；PAY_DATA 优先，缺失回退种子 */
+  function payContextRows(){
+    if(window.PAY_DATA && PAY_DATA.days){
+      if(state.site){ return buildPayDailyReal(SITE_ALIAS[state.site] || state.site); }
+      return buildPayRowsReal();
+    }
+    if(state.site){ return buildPayDaily(SITE_ALIAS[state.site] || state.site); }
+    return buildPayRows();
+  }
+  /* 低效名单弹窗 */
+  function showLowModal(){
+    var rows = payContextRows();
+    var items = [];
+    if(window.PAY_DATA && PAY_DATA.low){
+      /* 真实低效名单（PAY_DATA.low，周期内按站点汇总） */
+      var dates = payDates(state.span);
+      rows.forEach(function(p){
+        dates.forEach(function(d){
+          var arr = PAY_DATA.low[d] && PAY_DATA.low[d][p.site];
+          if(!arr) return;
+          arr.forEach(function(r){
+            items.push({ label: state.site ? d : p.site, name: r.name, reason: r.reason,
+              day: r.day, peak: r.peak, peakR: r.peakR, final: r.final });
+          });
+        });
+      });
+    } else {
+      rows.forEach(function(p){
+        for(var i=0;i<p.low;i++){
+          var seed = (p.site||'') + '#' + (p.date||'') + '#low' + i;
+          var rand = rng(seedFrom(seed));
+          var day = 20 + Math.floor(rand()*41);
+          var peak = Math.min(day, 5 + Math.floor(rand()*21));
+          var final = Math.max(0, day - (1 + Math.floor(rand()*5)));
+          items.push({
+            label: state.site ? p.date : p.site,
+            name: genLowName(seed),
+            reason: LOW_REASONS[Math.floor(rand()*LOW_REASONS.length)],
+            day: day, peak: peak, peakR: peak/day, final: final
+          });
+        }
+      });
+    }
+    var html = items.length
+      ? '<table class="star-table"><thead><tr><th>'+(state.site?'日期':'站点名称')+'</th><th>骑手姓名</th><th>低效不结算原因</th><th>全天完成单量</th><th>高峰期单量</th><th>高峰单量占比</th><th>剔除改派后完成单</th></tr></thead><tbody>'
+        + items.map(function(it){
+            return '<tr><td class="site">'+it.label+'</td><td>'+it.name+'</td><td>'+it.reason+'</td>'
+              + '<td class="num">'+it.day+'</td><td class="num">'+it.peak+'</td>'
+              + '<td class="num">'+(it.peakR*100).toFixed(2)+'%</td>'
+              + '<td class="num">'+it.final+'</td></tr>';
+          }).join('')
+        + '</tbody></table>'
+      : '<div class="modal-empty">暂无低效人员</div>';
+    document.getElementById('lowModalBody').innerHTML = html;
+    document.getElementById('lowModal').style.display = 'flex';
+  }
+  function closeLowModal(){
+    document.getElementById('lowModal').style.display = 'none';
+  }
+  /* 未达成名单筛选开关：权益得分 < 40 */
+  var detailFilter = false;
+  /* 明细详情弹窗（站点维度以上、本月/本周可用） */
+  function showDetailModal(){
+    var all = buildPayDetailAll();
+    var undone = all.filter(function(p){ return p.equity < 40; });
+    var rows = detailFilter ? undone : all;
+    var btn = document.getElementById('btnUndone');
+    if(btn){
+      btn.className = 'pay-btn' + (detailFilter ? ' active' : '');
+      btn.textContent = '未达成名单' + (detailFilter ? '（' + undone.length + '）' : '');
+    }
+    var html = '<table class="star-table"><thead><tr>'
+      + '<th>日期</th><th>站点名称</th><th>权益得分</th><th>门槛值</th><th>封顶值</th><th>原始达成数</th><th>重复入离职</th><th>低效人数</th><th>纯新剔除</th><th>实际达成</th>'
+      + '<th>门槛达成率</th><th>封顶达成率</th><th>标1人数</th><th>标1占比</th><th>高标准人数</th><th>高标准占比</th>'
+      + '</tr></thead><tbody>';
+    if(!rows.length){
+      html += '<tr><td class="num" colspan="16">'+(detailFilter?'暂无未达成站点':'暂无数据（数据更新至昨日）')+'</td></tr>';
+    }
+    rows.forEach(function(p){
+      html += '<tr>'
+        + '<td class="num">'+p.date+'</td>'
+        + '<td class="site">'+p.site+'</td>'
+        + '<td class="num">'+(p.equity<40?'<span class="down">':'')+p.equity.toFixed(2)+(p.equity<40?'</span>':'')+'</td>'
+        + '<td class="num">'+p.threshold+'</td>'
+        + '<td class="num">'+p.cap+'</td>'
+        + '<td class="num">'+p.raw+'</td>'
+        + '<td class="num">'+(p.dup>0?'<span class="warn-red">':'')+p.dup+(p.dup>0?'</span>':'')+'</td>'
+        + '<td class="num">'+(p.low>0?'<span class="warn-red">':'')+p.low+(p.low>0?'</span>':'')+'</td>'
+        + '<td class="num">'+(p.pure>0?'<span class="warn-red">':'')+p.pure+(p.pure>0?'</span>':'')+'</td>'
+        + '<td class="num">'+p.net+'</td>'
+        + '<td class="num">'+(p.tRate*100).toFixed(2)+'%</td>'
+        + '<td class="num">'+(p.cRate<1.02?'<span class="down">':'')+(p.cRate*100).toFixed(2)+'%'+(p.cRate<1.02?'</span>':'')+'</td>'
+        + '<td class="num">'+p.s1+'</td>'
+        + '<td class="num">'+(p.s1r>0.15?'<span class="warn">':'')+(p.s1r*100).toFixed(2)+'%'+(p.s1r>0.15?'</span>':'')+'</td>'
+        + '<td class="num">'+p.hi+'</td>'
+        + '<td class="num">'+(p.hir<0.85?'<span class="warn">':'')+(p.hir*100).toFixed(2)+'%'+(p.hir<0.85?'</span>':'')+'</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('detailModalBody').innerHTML = html;
+    document.getElementById('detailModal').style.display = 'flex';
+  }
+  function closeDetailModal(){
+    document.getElementById('detailModal').style.display = 'none';
+  }
+  /* 标题栏按钮渲染 */
+  function renderPayActions(){
+    var box = document.getElementById('payActions');
+    var html = '';
+    if(state.span === '昨日' || (state.site && (state.span === '本月' || state.span === '本周'))){
+      html += '<button class="pay-btn" id="btnLow" type="button">低效名单</button>';
+    }
+    if((state.span === '本月' || state.span === '本周') && !state.site){
+      html += '<button class="pay-btn" id="btnDetail" type="button">明细详情</button>';
+    }
+    box.innerHTML = html;
+    var bl = document.getElementById('btnLow');
+    if(bl){ bl.addEventListener('click', showLowModal); }
+    var bd = document.getElementById('btnDetail');
+    if(bd){ bd.addEventListener('click', showDetailModal); }
+  }
+  function renderPayTable(){
+    var title = PAY_TITLES[state.span] || '薪动力达成';
+    if(state.site) title = title.replace('累计','');
+    document.getElementById('payTitle').textContent = title;
+    renderPayActions();
+    var daily = !!state.site;
+    var showEquity = (state.span === '昨日');  /* 昨日周期：站长评级列改为权益得分 */
+    var rows = payContextRows();
+    var html = '<table class="star-table"><thead><tr>'
+      + '<th>'+(daily?'日期':'站点名称')+'</th>'
+      + '<th>'+(showEquity?'权益得分':'站长评级')+'</th><th>门槛值</th><th>封顶值</th><th>原始达成数</th><th>重复入离职</th><th>低效人数</th><th>纯新剔除</th><th>实际达成</th>'
+      + '<th>门槛达成率</th><th>封顶达成率</th><th>标1人数</th><th>标1占比</th><th>高标准人数</th><th>高标准占比</th>'
+      + '</tr></thead><tbody>';
+    if(!rows.length){
+      html += '<tr><td class="num" colspan="15">暂无数据（数据更新至昨日）</td></tr>';
+    }
+    rows.forEach(function(p){
+      html += '<tr>'
+        + '<td class="site">'+(daily?p.date:p.site)+'</td>'
+        + '<td class="num">'+(showEquity
+            ? (p.equity!=null ? (p.equity<40?'<span class="down">':'')+p.equity.toFixed(2)+(p.equity<40?'</span>':'') : '—')
+            : payRating(p.cRate))+'</td>'
+        + '<td class="num">'+p.threshold+'</td>'
+        + '<td class="num">'+p.cap+'</td>'
+        + '<td class="num">'+p.raw+'</td>'
+        + '<td class="num">'+(p.dup>0?'<span class="warn-red">':'')+p.dup+(p.dup>0?'</span>':'')+'</td>'
+        + '<td class="num">'+(p.low>0?'<span class="warn-red">':'')+p.low+(p.low>0?'</span>':'')+'</td>'
+        + '<td class="num">'+(p.pure>0?'<span class="warn-red">':'')+p.pure+(p.pure>0?'</span>':'')+'</td>'
+        + '<td class="num">'+p.net+'</td>'
+        + '<td class="num">'+(p.tRate*100).toFixed(2)+'%</td>'
+        + '<td class="num">'+(p.cRate<1.02?'<span class="down">':'')+(p.cRate*100).toFixed(2)+'%'+(p.cRate<1.02?'</span>':'')+'</td>'
+        + '<td class="num">'+p.s1+'</td>'
+        + '<td class="num">'+(p.s1r>0.15?'<span class="warn">':'')+(p.s1r*100).toFixed(2)+'%'+(p.s1r>0.15?'</span>':'')+'</td>'
+        + '<td class="num">'+p.hi+'</td>'
+        + '<td class="num">'+(p.hir<0.85?'<span class="warn">':'')+(p.hir*100).toFixed(2)+'%'+(p.hir<0.85?'</span>':'')+'</td>'
+        + '</tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('payTable').innerHTML = html;
+  }
+
+  /* ================= 数据刷新（模拟） ================= */
+  function dateCN(){
+    var d = new Date(), p = function(n){ return (n<10?'0':'')+n; };
+    return d.getFullYear() + '年' + p(d.getMonth()+1) + '月' + p(d.getDate()) + '日';
+  }
+  function jitter(){
+    jitterF = 1 + (Math.random()*0.04 - 0.02);
+    renderAll();
+    document.getElementById('updateInfo').textContent = '数据更新：' + dateCN() + '·身材最好长得最帅的飞兔彭于晏创建';
+    showToast('已刷新示例数据（' + pathStr() + '）');
+  }
+
+  /* ================= 交互 ================= */
+  var toastEl = document.getElementById('toast'), toastTimer = null;
+  function showToast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2200);
+  }
+
+  document.querySelectorAll('#segView button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      state.view = btn.getAttribute('data-view');
+      document.querySelectorAll('#segView button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('groupSpan').style.display = (state.view==='复盘总览') ? 'flex' : 'none';
+      renderAll();
+      syncInfo();
+    });
+  });
+
+  document.querySelectorAll('#segSpan button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      state.span = btn.getAttribute('data-span');
+      document.querySelectorAll('#segSpan button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      renderAll();
+      syncInfo();
+    });
+  });
+
+  document.querySelectorAll('#segCity button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      state.city = btn.getAttribute('data-city');
+      document.querySelectorAll('#segCity button').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      renderSiteNav();
+      renderAll();
+      syncInfo();
+    });
+  });
+
+  var autoBtn = document.getElementById('btn-auto');
+  var iconPlay = document.getElementById('icon-play'), iconPause = document.getElementById('icon-pause');
+  autoBtn.addEventListener('click', function(){
+    if(autoTimer){
+      clearInterval(autoTimer); autoTimer = null;
+      autoBtn.classList.remove('on');
+      iconPlay.style.display=''; iconPause.style.display='none';
+      document.getElementById('autoNote').textContent = '自动刷新已关闭';
+    } else {
+      autoTimer = setInterval(jitter, 5000);
+      autoBtn.classList.add('on');
+      iconPlay.style.display='none'; iconPause.style.display='';
+      document.getElementById('autoNote').textContent = '自动刷新已开启（每5秒）';
+      showToast('模拟自动刷新已开启（每 5 秒）');
+    }
+  });
+
+  var ref = document.getElementById('btn-refresh');
+  ref.addEventListener('click', function(){
+    ref.classList.remove('spinning'); void ref.offsetWidth; ref.classList.add('spinning');
+    jitter();
+  });
+
+  document.querySelectorAll('[data-toast]').forEach(function(a){
+    a.addEventListener('click', function(){ showToast(a.getAttribute('data-toast')); });
+  });
+
+  /* ================= 顶部副标题同步 ================= */
+  function syncInfo(){
+    document.getElementById('updateInfo').textContent = '数据更新：' + dateCN() + '·身材最好长得最帅的飞兔彭于晏创建';
+  }
+
+  /* ================= 实时时钟 ================= */
+  function tick(){
+    var d = new Date(), p = function(n){ return (n<10?'0':'')+n; };
+    document.getElementById('clock').textContent =
+      d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '
+      + p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ================= 初始化 ================= */
+  function initAll(){
+    /* 星级看板标题：显示当前日期所在月份（如 8月星级看板） */
+    document.getElementById('starTitle').textContent = (new Date().getMonth()+1) + '月星级看板';
+
+    /* 站点下拉：change 事件（绑定一次即可） */
+    /* 站点下拉：change 事件（绑定一次即可） */
+    document.getElementById('segSite').addEventListener('change', function(){
+      state.site = this.value || null;
+      renderAll();
+      syncInfo();
+    });
+
+    /* 复盘总览默认显示时间范围联动 */
+    document.getElementById('groupSpan').style.display = 'flex';
+
+    /* 低效名单弹窗：关闭按钮 + 点击遮罩关闭 */
+    document.getElementById('lowModalClose').addEventListener('click', closeLowModal);
+    document.getElementById('lowModal').addEventListener('click', function(e){
+      if(e.target === this) closeLowModal();
+    });
+    /* 明细详情弹窗：关闭按钮 + 点击遮罩关闭 */
+    document.getElementById('detailModalClose').addEventListener('click', closeDetailModal);
+    document.getElementById('detailModal').addEventListener('click', function(e){
+      if(e.target === this) closeDetailModal();
+    });
+    /* 体验构成弹窗：关闭按钮 + 点击遮罩关闭 */
+    document.getElementById('expModalClose').addEventListener('click', closeExpModal);
+    document.getElementById('expModal').addEventListener('click', function(e){
+      if(e.target === this) closeExpModal();
+    });
+    /* 未达成名单：权益得分<40 筛选 */
+    document.getElementById('btnUndone').addEventListener('click', function(){
+      detailFilter = !detailFilter;
+      showDetailModal();
+    });
+
+    /* 占比明细弹窗：打开 + 关闭按钮 + 点击遮罩关闭 */
+    document.getElementById('btnRatioDetail').addEventListener('click', openRatioDetail);
+    document.getElementById('ratioModalClose').addEventListener('click', closeRatioModal);
+    document.getElementById('ratioModal').addEventListener('click', function(e){
+      if(e.target === this) closeRatioModal();
+    });
+
+    /* 违规明细弹窗：打开 + 关闭 + 遮罩关闭 + 双页切换 */
+    document.getElementById('btnVioDetail').addEventListener('click', openVioModal);
+    document.getElementById('vioModalClose').addEventListener('click', closeVioModal);
+    document.getElementById('vioModal').addEventListener('click', function(e){
+      if(e.target === this) closeVioModal();
+    });
+    document.getElementById('vioTabs').addEventListener('click', function(e){
+      var btn = e.target.closest ? e.target.closest('.vio-tab') : null;
+      if(!btn) return;
+      document.querySelectorAll('.vio-tab').forEach(function(t){ t.classList.remove('active'); });
+      btn.classList.add('active');
+      renderVioModal(btn.getAttribute('data-tab'));
+    });
+
+    /* 权益项安全：戴盔系带 / 路口超速 切换 */
+    document.getElementById('btnHelmet').addEventListener('click', function(){ state.safetyType = 'helmet'; renderSafety(); });
+    document.getElementById('btnOverspeed').addEventListener('click', function(){ state.safetyType = 'overspeed'; renderSafety(); });
+
+    /* 精排预估：天气标签切换 */
+    document.getElementById('btnWeatherNormal').addEventListener('click', function(){ state.weather = 'normal'; renderTodayPlan(); });
+    document.getElementById('btnWeatherBad').addEventListener('click', function(){ state.weather = 'bad'; renderTodayPlan(); });
+
+    /* 风险骑手明细弹窗 */
+    document.getElementById('btnRiDetail').addEventListener('click', openRiModal);
+    document.getElementById('riModalClose').addEventListener('click', closeRiModal);
+    document.getElementById('riModal').addEventListener('click', function(e){ if(e.target === this) closeRiModal(); });
+    document.getElementById('btnLowEff').addEventListener('click', openLowEffModal);
+    document.getElementById('lowEffModalClose').addEventListener('click', closeLowEffModal);
+    document.getElementById('lowEffModal').addEventListener('click', function(e){ if(e.target === this) closeLowEffModal(); });
+    document.getElementById('kpiModalClose').addEventListener('click', closeKpiModal);
+    document.getElementById('kpiModal').addEventListener('click', function(e){ if(e.target === this) closeKpiModal(); });
+    document.getElementById('btnPlanDetail').addEventListener('click', openPlanDetail);
+    document.getElementById('planDetailClose').addEventListener('click', closePlanDetail);
+    document.getElementById('planDetailModal').addEventListener('click', function(e){ if(e.target === this) closePlanDetail(); });
+    document.querySelectorAll('#planDetailBar button').forEach(function(b){
+      b.addEventListener('click', function(){
+        var v = b.getAttribute('data-pd');
+        planDetailSel = (planDetailSel === v) ? null : v;
+        openPlanDetail();
+      });
+    });
+
+    /* 权益弹窗：打开（先验密码） + 密码确认 + 关闭 */
+    document.getElementById('btnBenefit').addEventListener('click', openBenefit);
+    document.querySelectorAll('#benefitCityBar button').forEach(function(b){
+      b.addEventListener('click', function(){
+        var c = b.getAttribute('data-city');
+        if(state.city === '总览'){ benefitSelCity = (benefitSelCity === c) ? null : c; }
+        showBenefitModal();
+      });
+    });
+    document.getElementById('benefitPwdBtn').addEventListener('click', tryBenefitPwd);
+    document.getElementById('benefitPwd').addEventListener('keydown', function(e){
+      if(e.key === 'Enter') tryBenefitPwd();
+    });
+    document.getElementById('benefitLock').addEventListener('click', function(e){
+      if(e.target === this) closeBenefitLock();
+    });
+    document.getElementById('benefitModalClose').addEventListener('click', closeBenefitModal);
+    document.getElementById('benefitModal').addEventListener('click', function(e){
+      if(e.target === this) closeBenefitModal();
+    });
+
+    /* 组织维度密码锁：按钮 + 回车解锁 */
+    document.getElementById('lockBtn').addEventListener('click', tryUnlock);
+    document.getElementById('lockInput').addEventListener('keydown', function(e){
+      if(e.key === 'Enter') tryUnlock();
+    });
+    document.getElementById('lockInput').focus();
+
+    renderSiteNav();
+    renderAll();
+    syncInfo();
+
+    window.addEventListener('resize', function(){
+      sparkCharts.forEach(function(c){ if(c) c.resize(); });
+      Object.keys(pieCharts).forEach(function(k){ if(pieCharts[k]) pieCharts[k].resize(); });
+      if(trendChart) trendChart.resize();
+      if(expChart) expChart.resize();
+      if(retainChart) retainChart.resize();
+      if(safetyChart) safetyChart.resize();
+      if(attrChart) attrChart.resize();
+    });
+  }
+
+  if (window.echarts) { initAll(); }
+  else {
+    window.addEventListener('load', function(){ if (window.echarts) initAll(); });
+  }
+})();
+</script>
+</body>
+</html>
